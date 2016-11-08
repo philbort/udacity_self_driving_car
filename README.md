@@ -1,5 +1,6 @@
 # [Udacity Self Driving Car Nanodegree](https://www.udacity.com/drive)
 
+This repository contains all the projects I have completed for the [Self Driving Car Nanodegree](https://www.udacity.com/drive) offered by [Udacity](https://www.udacity.com).
 
 ## Term 1:  Computer Vision and Deep Learning
 
