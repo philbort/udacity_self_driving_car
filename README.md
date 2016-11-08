@@ -1,6 +1,6 @@
 # [Udacity Self Driving Car Nanodegree](https://www.udacity.com/drive)
 
-This repository contains all the projects I have completed for the [Self Driving Car Nanodegree](https://www.udacity.com/drive) offered by [Udacity](https://www.udacity.com).
+This repository contains all the projects I have completed for the [Self Driving Car Nanodegree](https://www.udacity.com/drive) offered by [Udacity](https://www.udacity.com). There are over 11,000 people applied for this Nanodegree progam and I was selected as one of the 500 students for the very first cohort started in October 2016.
 
 ## Term 1:  Computer Vision and Deep Learning
 
