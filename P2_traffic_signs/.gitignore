@@ -1,6 +1,10 @@
 data
+checkpoint
 .ipynb_checkpoints
 *.h5
 models
 *.swp
 *.p
+.DS_Store
+*.ckpt
+*.meta
