@@ -8,3 +8,5 @@ models
 .DS_Store
 *.ckpt
 *.meta
+img_transform_NB.ipynb
+*.html
