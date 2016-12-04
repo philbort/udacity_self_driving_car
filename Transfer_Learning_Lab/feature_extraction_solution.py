@@ -1,47 +1,64 @@
-import time
+import pickle
 import tensorflow as tf
 import numpy as np
-import pandas as pd
-from scipy.misc import imread
-from alexnet import AlexNet
+from keras.layers import Input, Flatten, Dense
+from keras.models import Model
 
-sign_names = pd.read_csv('signnames.csv')
-nb_classes = 43
+flags = tf.app.flags
+FLAGS = flags.FLAGS
 
-x = tf.placeholder(tf.float32, (None, 32, 32, 3))
-resized = tf.image.resize_images(x, (227, 227))
+# command line flags
+flags.DEFINE_string('training_file', '', "Bottleneck features training file (.p)")
+flags.DEFINE_string('validation_file', '', "Bottleneck features validation file (.p)")
+flags.DEFINE_integer('epochs', 50, "The number of epochs.")
+flags.DEFINE_integer('batch_size', 256, "The batch size.")
 
-# Returns the second final layer of the AlexNet model,
-# this allows us to redo the last layer for the specifically for 
-# traffic signs model.
-fc7 = AlexNet(resized, feature_extract=True)
-shape = (fc7.get_shape().as_list()[-1], nb_classes)
-fc8W = tf.Variable(tf.truncated_normal(shape, stddev=1e-2))
-fc8b = tf.Variable(tf.zeros(nb_classes))
-logits = tf.nn.xw_plus_b(fc7, fc8W, fc8b)
-probs = tf.nn.softmax(logits)
 
-init = tf.initialize_all_variables()
-sess = tf.Session()
-sess.run(init)
+def load_bottleneck_data(training_file, validation_file):
+    """
+    Utility function to load bottleneck features.
 
-# Read Images
-im1 = imread("construction.jpg").astype(np.float32)
-im1 = im1 - np.mean(im1)
+    Arguments:
+        training_file - String
+        validation_file - String
+    """
+    print("Training file", training_file)
+    print("Validation file", validation_file)
 
-im2 = imread("stop.jpg").astype(np.float32)
-im2 = im2 - np.mean(im2)
+    with open(training_file, 'rb') as f:
+        train_data = pickle.load(f)
+    with open(validation_file, 'rb') as f:
+        validation_data = pickle.load(f)
 
-# Run Inference
-t = time.time()
-output = sess.run(probs, feed_dict={x: [im1, im2]})
+    X_train = train_data['features']
+    y_train = train_data['labels']
+    X_val = validation_data['features']
+    y_val = validation_data['labels']
 
-# Print Output
-for input_im_ind in range(output.shape[0]):
-    inds = np.argsort(output)[input_im_ind, :]
-    print("Image", input_im_ind)
-    for i in range(5):
-        print("%s: %.3f" % (sign_names.ix[inds[-1 - i]][1], output[input_im_ind, inds[-1 - i]]))
-    print()
+    return X_train, y_train, X_val, y_val
 
-print("Time: %.3f seconds" % (time.time() - t))
+
+def main(_):
+    # load bottleneck data
+    X_train, y_train, X_val, y_val = load_bottleneck_data(FLAGS.training_file, FLAGS.validation_file)
+
+    print(X_train.shape, y_train.shape)
+    print(X_val.shape, y_val.shape)
+
+    nb_classes = len(np.unique(y_train))
+
+    # define model
+    input_shape = X_train.shape[1:]
+    inp = Input(shape=input_shape)
+    x = Flatten()(inp)
+    x = Dense(nb_classes, activation='softmax')(x)
+    model = Model(inp, x)
+    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+    # train model
+    model.fit(X_train, y_train, nb_epoch=FLAGS.epochs, batch_size=FLAGS.batch_size, validation_data=(X_val, y_val), shuffle=True)
+
+
+# parses flags and calls the `main` function above
+if __name__ == '__main__':
+    tf.app.run()

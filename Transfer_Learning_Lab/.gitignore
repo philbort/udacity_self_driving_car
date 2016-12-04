@@ -1,3 +1,3 @@
-bvlc-alexnet.npy
-train.p
-.DS_Store
+inception-100/
+resnet-100/
+vgg-100/
