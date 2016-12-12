@@ -2,7 +2,7 @@
 
 ## Project 3: Bahaviroal Cloning
 
-![ScreenShot](simulator.PNG)
+![ScreenShot](simulator.jpeg)
 
 ### Project Overview
 
