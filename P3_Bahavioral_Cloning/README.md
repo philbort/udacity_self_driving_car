@@ -2,8 +2,8 @@
 
 ## Project 3: Bahaviroal Cloning
 
-![ScreenShot](simulator.jpeg){:height="36px" width="36px"}
-
+![ScreenShot](simulator.jpeg)
+<img src="simulator.jpeg" width="48">
 ### Project Overview
 
 1. Drive the car in the training mode of the Udaicty simulator to collect training data. 
