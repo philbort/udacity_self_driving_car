@@ -1,9 +1,7 @@
 # [Udacity Self Driving Car Nanodegree](https://www.udacity.com/drive)
 
 ## Project 3: Bahaviroal Cloning
-
-![ScreenShot](simulator.jpeg)
-
+<img src="simulator.jpeg" width="480", height="360">
 ### Project Overview
 
 1. Drive the car in the training mode of the Udaicty simulator to collect training data. 
