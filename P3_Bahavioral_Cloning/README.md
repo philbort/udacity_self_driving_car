@@ -1,7 +1,7 @@
 # [Udacity Self Driving Car Nanodegree](https://www.udacity.com/drive)
 
 ## Project 3: Bahaviroal Cloning
-<img src="images/simulator.jpeg" width="480", height="360">
+<img src="example_images/simulator.jpeg" width="480", height="360">
 
 ### Project Overview
 
@@ -17,14 +17,28 @@ Three laps of the track and another three laps in the opposite direction are rec
 
 The key to this project is to get data which can help **recovering from excursion**. Otherwise, your car will always drive straight and when it is out of the runway it will never recover from it, such as below:
 
-<img src="images/where_am_i.png" width="480", height="360">
+<img src="example_images/where_am_i.png" width="480", height="360">
 
 
 ---
 ### Data Processing
 
 1. Data is loaded with **Pandas**. The images from left, center, and right cameras are concatenated to form a two-column dataframe: **Image** and **Steering**.
-2. Images are first cropped to get rid of the sky and trees in the upper side and the car front in the lower side. Then they are resized to **66 by 200 by 3** before converted to **YUV** color space. The size and the color space are obtained from **[the Nvidia paper](end-to-end-dl-using-px.pdf)**. Note that the same image transformation has to be done in **[drive.py](drive.py)** as well so that the model always gets the same format of input.
+2. Images are first cropped to get rid of the sky and trees in the upper side and the car front in the lower side. Then they are resized to **66 by 200 by 3** before converted to **YUV** color space. The size and the color space are obtained from **[the Nvidia paper](end-to-end-dl-using-px.pdf)**. Note that the same image transformation has to be done in **[drive.py](drive.py)** as well so that the model always gets the same format of input. Below is an example pipeline of the image processing:
+      
+      **original image (160 x 320 x 3):**
+      
+      <img src="example_images/original.png">  
+      **Cropped image (80 x 320 x 3):**        
+      
+      <img src="example_images/crop.png">  
+      **Resized image (66 x 200 x 3):**
+      
+      <img src="example_images/resize.png">  
+      **YUV image (66 x 200 x 3):**
+      
+      <img src="example_images/yuv.png">  
+
 3. Since in the **autonomous mode** only the center images are used, we need to adjust the left and right images as if they are taken by the center cameras. All the steering angles from the left images are added a random value from 0.1 to 0.5, and all the steering angles from the right images are added a random value from -0.1 to -0.5.
 4. A **image generator** is developed to load the images on the fly. Avoid to load all images at once can save a lot of memories when image number is big. The **image generator** is called by **Keras fit_generator()** to provide the trainning data.
 
@@ -33,9 +47,6 @@ The key to this project is to get data which can help **recovering from excursio
 ### Model
 
 The model is obtained from [the Nvidia paper](end-to-end-dl-using-px.pdf), built with **Keras**, and have total **147,148 parameters**. The summary of the model is shown as below:
-
-<img src="images/nvidia_model.png" width="480", height="600"> 
-
 
 | Layer (type) | Output Shape | Param # | Connected to |
 | :--- | :--- | ---: | :--- |
