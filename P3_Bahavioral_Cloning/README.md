@@ -24,7 +24,7 @@ The key to this project is to get data which can help **recovering from excursio
 ### Data Processing
 
 1. Data is loaded with **Pandas**. The images from left, center, and right cameras are concatenated to form a two-column dataframe: **Image** and **Steering**.
-2. Images are first cropped to get rid of the sky and trees in the upper side and the car front in the lower side. Then they are resized to **66 by 200 by 3** before converted to **YUV** color space. The size and the color space are obtained from [the Nvidia paper](end-to-end-dl-using-px.pdf). Note that the same image transformation has to be done in [drive.py](drive.py) as well so that the model always gets the same format of input.
+2. Images are first cropped to get rid of the sky and trees in the upper side and the car front in the lower side. Then they are resized to **66 by 200 by 3** before converted to **YUV** color space. The size and the color space are obtained from **[the Nvidia paper](end-to-end-dl-using-px.pdf)**. Note that the same image transformation has to be done in **[drive.py](drive.py)** as well so that the model always gets the same format of input.
 3. Since in the **autonomous mode** only the center images are used, we need to adjust the left and right images as if they are taken by the center cameras. All the steering angles from the left images are added a random value from 0.1 to 0.5, and all the steering angles from the right images are added a random value from -0.1 to -0.5.
 4. A **image generator** is developed to load the images on the fly. Avoid to load all images at once can save a lot of memories when image number is big. The **image generator** is called by **Keras fit_generator()** to provide the trainning data.
 
