@@ -48,6 +48,8 @@ The key to this project is to get data which can help **recovering from excursio
 
 The model is obtained from [the Nvidia paper](end-to-end-dl-using-px.pdf), built with **Keras**, and have total **147,148 parameters**. The summary of the model is shown as below:
 
+<img src="example_images/nvidia_model.png" width="480", height="600"> 
+
 | Layer (type) | Output Shape | Param # | Connected to |
 | :--- | :--- | ---: | :--- |
 | lambda_1 (Lambda) | (None, 66, 200, 3)| 0 | lambda_input_1[0][0] |
