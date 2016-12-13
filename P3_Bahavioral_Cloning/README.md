@@ -39,21 +39,22 @@ The key to this project is to get data which can help **recovering from excursio
       
       <img src="example_images/yuv.png">  
 
-3. Since in the **autonomous mode** only the center images are used, we need to adjust the left and right images as if they are taken by the center cameras. All the steering angles from the left images are added a random value from 0.1 to 0.5, and all the steering angles from the right images are added a random value from -0.1 to -0.5.
-4. A **image generator** is developed to load the images on the fly. Avoid to load all images at once can save a lot of memories when image number is big. The **image generator** is called by **Keras fit_generator()** to provide the trainning data.
+3. Since in the **autonomous mode** only the center images are used, we need to adjust the left and right images as if they are taken by the center cameras. For the left images, only those with positive steering angle are used as the training data. Likewise, for the right images, only those with negative steering angle are used. All the steering angles from the left and images are multiplied by a random integer between 1 and 3 to simulate the recovery at different rates.
+4. A **image generator** is developed to load the images on the fly in parallell with the training model. Avoid loading all images at once can save a lot of memories when number of images is big. The **image generator** is called by **Keras fit_generator()** to provide the trainning data.
 
 
 ---
 ### Model
 
-The model is obtained from [the Nvidia paper](end-to-end-dl-using-px.pdf), built with **Keras**, and have total **147,148 parameters**. The summary of the model is shown as below:
+The model is obtained from [the Nvidia paper](end-to-end-dl-using-px.pdf), built with **Keras**, and have total **154,132 parameters**. The summary of the model is shown as below:
 
 <img src="example_images/nvidia_model.png" width="480", height="600"> 
 
 | Layer (type) | Output Shape | Param # | Connected to |
 | :--- | :--- | ---: | :--- |
-| lambda_1 (Lambda) | (None, 66, 200, 3)| 0 | lambda_input_1[0][0] |
-| convolution2d_1 (Convolution2D) | (None, 33, 100, 5)| 1805 | lambda_1[0][0] |
+| lambda_1 (Lambda) | (None, 66, 200, 3) | 0 | lambda_input_1[0][0] |
+| convolution2d_1 (Convolution2D) | (None, 33, 100, 5) | 1805 | lambda_1[0][0] |
+| maxpooling2d_1 (MaxPooling2D) | (None, 16, 50, 5) | 1805 | convolution2d_1[0][0] |
 | elu_1 (ELU) | (None, 16, 50, 5) | 0 | convolution2d_1[0][0] |
 | convolution2d_2 (Convolution2D) |(None, 8, 25, 5) | 4505 | elu_1[0][0] |
 | elu_2 (ELU) |(None, 8, 25, 5) | 0 | convolution2d_2[0][0] |
@@ -80,7 +81,7 @@ The model is obtained from [the Nvidia paper](end-to-end-dl-using-px.pdf), built
 | dense_5 (Dense) | (None, 1) | 11 | elu_9[0][0] |
 
 ---
-### Summary
+### Discussion
 
 
 ---
