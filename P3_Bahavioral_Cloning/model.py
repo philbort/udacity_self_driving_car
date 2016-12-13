@@ -12,7 +12,7 @@ from keras.optimizers import Adam
 
 # Import data from the csv file
 def import_data(csv_file, side_image = True):
-    data = pd.read_csv(csv_file, header = None)
+    data = pd.read_csv(csv_file)#, header = None)
     data.columns = ['center', 'left', 'right', 'steering', 'throttle', 'brake', 'speed']
     # If we use the side images
     if side_image is True:
@@ -20,7 +20,7 @@ def import_data(csv_file, side_image = True):
         left_data = data[['left', 'steering']]
         left_data.columns = ['image', 'steering']
         # Only save "turn right" images from left camera
-        #left_data = left_data[(left_data.steering > 0.0)]
+        left_data = left_data[(left_data.steering > 0.0)]
         # Center Data
         center_data = data[['center', 'steering']]
         center_data.columns = ['image', 'steering']
@@ -28,7 +28,7 @@ def import_data(csv_file, side_image = True):
         right_data = data[['right', 'steering']]
         right_data.columns = ['image', 'steering']
         # Only save "turn left" images from right camera
-        #right_data = right_data[(right_data.steering < 0.0)]
+        right_data = right_data[(right_data.steering < 0.0)]
         # Frame
         frames = [left_data, center_data, right_data]
         # Combine data
@@ -47,7 +47,7 @@ def load_image(path):
     width, height = 200, 66
     image = cv2.imread(path)
     # Crop the sky and the front of the car
-    image = image[60:image.shape[0] - 20, :]
+    image = image[60:image.shape[0], :]
     # Resize image
     image = cv2.resize(image, (width, height))
     # Convert color from BGR to YUV (ref: Nvidia paper)
@@ -73,10 +73,8 @@ def image_generator(x, y, batch_size = 128):
             path = x[i]
             label = y[i]
             # Increase the steering angle for side images to mimick turns
-            if 'right' in path:
-                label = label + 0.1 * randint(1, 3)
-            elif 'left' in path:
-                label = label - 0.1 * randint(1, 3)
+            if ('right' in path) or ('left' in path):
+                label = label * randint(2, 4)
             # Some path starts with a space, no idea why
             if path.startswith(' '):
                 path = path[1:]
