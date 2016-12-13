@@ -5,9 +5,9 @@
 
 ### Project Overview
 
-1. Drive the car in the **training mode** of the Udaicty simulator to collect training data. 
+1. Drive the car in the *training mode* of the Udaicty simulator to collect training data. 
 2. Clone the behavior of the car by training a neural network **end-to-end** with the collected training data.
-3. Use the trained model to drive the car in the **autonomous mode** of the Udacity simulator.
+3. Use the trained model to drive the car in the *autonomous mode* of the Udacity simulator.
 
 ---
 
@@ -23,8 +23,8 @@ The key to this project is to get data which can help **recovering from excursio
 ---
 ### Data Processing
 
-1. Data is loaded with **Pandas**. The images from left, center, and right cameras are concatenated to form a two-column dataframe: **Image** and **Steering**.
-2. Images are first cropped to get rid of the sky and trees in the upper side and the car front in the lower side. Then they are resized to **66 by 200 by 3** before converted to **YUV** color space. The size and the color space are obtained from **[the Nvidia paper](end-to-end-dl-using-px.pdf)**. Note that the same image transformation has to be done in **[drive.py](drive.py)** as well so that the model always gets the same format of input. Below is an example pipeline of the image processing:
+1. Data is loaded with *Pandas*. The images from left, center, and right cameras are concatenated to form a two-column dataframe: *Image* and *Steering*.
+2. Images are first cropped to get rid of the sky and trees in the upper side and the car front in the lower side. Then they are resized to **66 by 200 by 3** before converted to **YUV** color space. The size and the color space are obtained from the **[Nvidia paper](end-to-end-dl-using-px.pdf)**. Note that the same image transformation has to be done in **[drive.py](drive.py)** as well so that the model always gets the same format of input. Below is an example pipeline of the image processing:
       
       **original image (160 x 320 x 3):**
       
@@ -39,14 +39,14 @@ The key to this project is to get data which can help **recovering from excursio
       
       <img src="example_images/yuv.png">  
 
-3. Since in the **autonomous mode** only the center images are used, we need to adjust the left and right images as if they are taken by the center cameras. For the left images, only those with positive steering angle are used as the training data. Likewise, for the right images, only those with negative steering angle are used. All the steering angles from the left and images are multiplied by a random integer between 1 and 3 to simulate the recovery at different rates.
-4. A **image generator** is developed to load the images on the fly in parallell with the training model. Avoid loading all images at once can save a lot of memories when number of images is big. The **image generator** is called by **Keras fit_generator()** to provide the trainning data.
+3. Since in the *autonomous mode* only the center images are used, we need to adjust the left and right images as if they are taken by the center cameras. For the left images, only those with positive steering angle are used as the training data. Likewise, for the right images, only those with negative steering angle are used. All the steering angles from the left and images are multiplied by a random integer between 1 and 3 to simulate the recovery at different rates.
+4. A *image generator* is developed to load the images on the fly in parallell with the training model. Avoid loading all images at once can save a lot of memories when number of images is big. The *image generator* is called by *Keras fit_generator()* to provide the trainning data.
 
 
 ---
 ### Model
 
-The model is obtained from [the Nvidia paper](end-to-end-dl-using-px.pdf), built with **Keras**, and have total **154,132 parameters**. The summary of the model is shown as below:
+The model is obtained from the **[Nvidia paper](end-to-end-dl-using-px.pdf)**, built with *Keras*, and have total **154,132 parameters**. The summary of the model is shown as below:
 
 <img src="example_images/nvidia_model.png" width="480", height="600"> 
 
@@ -83,5 +83,8 @@ The model is obtained from [the Nvidia paper](end-to-end-dl-using-px.pdf), built
 ---
 ### Discussion
 
+1. The key to the success of this project is the **recovery** capability. I didn't record any images while driving from the edges of the road. As many people did and found it is very effective to train the car to recover from excursion, I found it impractical in reality. It works in a simulator. *But for a real car in the real world, we would never train a car in that way*. What I did was to modify the steering angles of the left and right images and use those images to train for recovery. One thing I didn't do but I think it will be useful is to detect the road edges from the left and right images (e.g., wich a canny edge detector). Then make the steering angle a function of the edge angle, instead of a random number multiplier in my implementation. In this way, we will have a steeper steering angle when we have a more horizontal road edge.
+
+2. The values of **loss** and **accuracy** of the training model is very unreliable in this project. One reason is that a huge amount of steering angles in the trainning data is *zero*, and others are also *very small angles*. It has been shared among the Udacity student community that some of the low accuracy models actually did much better in testing than the relatively higher accuracy models. For the same reason, validation is also not very useful in this case. That's the reason why I have a super small validation sample size.
 
 ---
