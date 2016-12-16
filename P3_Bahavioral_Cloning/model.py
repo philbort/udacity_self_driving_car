@@ -65,9 +65,8 @@ def image_generator(x, y, batch_size = 128):
     features = np.ndarray(shape = (batch_size, 66, 200, 3))
     labels = np.ndarray(shape = (batch_size,))
     while True:
-        # If we run a complete epoch
+        # If we ran a complete epoch
         if( (batch_cnt % batch_per_epoch) == 0):
-            print(batch_cnt, batch_per_epoch)
             # Shuffle the data
             ind = np.arange(0, epoch_size)
             np.random.shuffle(ind)
