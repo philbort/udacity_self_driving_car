@@ -57,30 +57,36 @@ def load_image(path):
 # Image generator called by keras fit_generator to save memory
 def image_generator(x, y, batch_size = 128):
 
-    # Shuffle the images
-    epoch_size = len(x)
-    ind = np.arange(0, epoch_size)
-    np.random.shuffle(ind)
-    x = x[ind]
-    y = y[ind]
-
+    # Initialization
+    epoch_size = len(x) - len(x)%batch_size
+    batch_per_epoch = epoch_size/batch_size
+    batch_cnt = 0
     start = 0
     features = np.ndarray(shape = (batch_size, 66, 200, 3))
     labels = np.ndarray(shape = (batch_size,))
     while True:
+        # If we run a complete epoch
+        if( (batch_cnt % batch_per_epoch) == 0):
+            print(batch_cnt, batch_per_epoch)
+            # Shuffle the data
+            ind = np.arange(0, epoch_size)
+            np.random.shuffle(ind)
+            x = x[ind]
+            y = y[ind]
+            start = 0
         for i in range(start, start + batch_size):
-            i = i % epoch_size
             path = x[i]
             label = y[i]
             # Increase the steering angle for side images to mimick turns
             if ('right' in path) or ('left' in path):
-                label = label * randint(2, 4)
+                label = label * randint(1, 3)
             # Some path starts with a space, no idea why
             if path.startswith(' '):
                 path = path[1:]
             features[i%batch_size] = load_image(path)
             labels[i%batch_size] = label
-
+        # Update batch count
+        batch_cnt += 1
         start = start + batch_size
         yield (features, labels)
 
