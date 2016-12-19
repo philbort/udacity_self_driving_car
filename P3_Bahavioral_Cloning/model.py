@@ -77,8 +77,10 @@ def image_generator(x, y, batch_size = 128):
             path = x[i]
             label = y[i]
             # Increase the steering angle for side images to mimick turns
-            if ('right' in path) or ('left' in path):
-                label = label * randint(1, 3)
+            if ('right' in path):
+                label = label - 0.1
+            elif ('left' in path):
+                label = label + 0.1 
             # Some path starts with a space, no idea why
             if path.startswith(' '):
                 path = path[1:]
@@ -93,7 +95,7 @@ def image_generator(x, y, batch_size = 128):
 def load_model(model_file, model_weights):
     with open(model_file, 'r') as f:
         model = model_from_json(json.load(f))    
-    adam = Adam(lr = 0.00001)
+    adam = Adam(lr = 0.00005)
     model.compile(optimizer=adam, loss="mse", metrics = ['accuracy'])
     model.load_weights(model_weights)
     print("Load model from %s with weights %s" %(model_file, model_weights))
