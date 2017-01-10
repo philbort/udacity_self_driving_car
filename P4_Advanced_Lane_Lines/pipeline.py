@@ -6,6 +6,7 @@ import glob
 
 # Calibrate camera given calibration images
 def camera_calibration(directory, nx, ny, draw = False):
+
   images = glob.glob(os.path.join(directory, 'calibration*'))
   objpoints = []
   imgpoints = []
@@ -31,7 +32,7 @@ def camera_calibration(directory, nx, ny, draw = False):
         plt.imshow(img)
         plt.show()
     else:
-      print('Could not calibrate from %s' %file)
+      print('Could not find corners from %s' %file)
 
   # Camera calibration, given object points, image points, and the shape of the grayscale image:
   ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
@@ -39,16 +40,25 @@ def camera_calibration(directory, nx, ny, draw = False):
   # Return the camera matrix and the distortion coefficients
   return mtx, dist
 
-# 
-def camera_undistort(directory, mtx, dist):
+# Use calibrated camera parameters to undistort images
+def camera_undistort(img, mtx, dist):
 
-
+  undist = cv2.undistort(img, mtx, dist, None, mtx)
+  return undist
 
 if __name__ == '__main__':
 
   mtx, dist = camera_calibration(directory = 'camera_cal/', nx = 9, ny = 6, draw = False)
 
-  '''
-  # Undistorting a test image:
-  dst = cv2.undistort(img, mtx, dist, None, mtx)
-  '''
+  test_imgs = glob.glob(os.path.join('test_images/', 'test*.jpg'))
+  for file in test_imgs:
+    img = cv2.cvtColor(cv2.imread(file), cv2.COLOR_BGR2RGB)
+    undist = camera_undistort(img = img, mtx = mtx, dist = dist)
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize = (24, 9))
+    #f.tight_layout()
+    ax1.imshow(img)
+    ax1.set_title('Original Image', fontsize = 50)
+    ax2.imshow(undist)
+    ax2.set_title('Undistorted Image', fontsize = 50)
+    plt.subplots_adjust(left = 0.0, right = 1.0, top = 0.9, bottom = 0.0)
+    plt.show()
