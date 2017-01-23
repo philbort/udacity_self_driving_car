@@ -134,5 +134,10 @@ Here's a [link to my video result][video1]
 
 ####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
-
+My main issue is that I haven't got enough time to work on this project. Work has been very busy at my company recently. Below are the improvements I will try to make once I have more time:
+   
+ 1. Modularize the whole thing and convert the notebook to `py` files.
+ 2. Get rid of the hard-coded numbers as much as possible and make the code robust.
+ 3. Implement a class for the lines and use it to get temporal information from the videos to better smooth the lines.
+ 4. Tackle the challenge videos.
+ 5. Look back to Project 1 and try to find functions from there to help this project.
