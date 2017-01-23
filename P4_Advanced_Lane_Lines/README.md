@@ -22,7 +22,9 @@ The goals / steps of this project are the following:
 [image7]: ./example_images/undistorted7.png "Undistorted7"
 [image8]: ./example_images/undistorted8.png "Undistorted8"
 [image9]: ./test_images/test1.jpg "Test1"
-[image10]: ./example_iamges/threshold1.png "Threshold1"
+[image10]: ./example_images/threshold1.png "Threshold1"
+[image11]: ./example_images/transform1.png "Transform1"
+[image12]: ./example_images/transform2.png "Transform2"
 [video1]: ./project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
@@ -66,40 +68,19 @@ To demonstrate this step, I will describe how I apply the distortion correction 
 ![alt text][image9]
 
 ####2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps are under `4` in the  [IPython notebook](./P4.ipynb).  Here's an example of my output for this step of the test image above:
-
+I used a combination of color and gradient thresholds to generate a binary image (thresholding steps are under `4` in the [IPython notebook](./P4.ipynb).  Here's an example of my output for this step of the test image:
 
 ![alt text][image10]
 
 ####3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+The code for my perspective transform is located under `3` in the [IPython notebook](./P4.ipynb). The `PerspectiveTransform()` function uses hard-coded pixel locations for both the original and new images and calculates the `M` and `Minv` matrices for perspective transform. Then, the `M` matrix is used by `cv2.warpPerspective` to convert the original image to its bird's view, while `Minv` is used to do transform in the opposite direction. Here's an example of my output for this step of the test image:
 
-```
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
+![alt text][image11]
 
-```
-This resulted in the following source and destination points:
+And an example of a transformed image after thresholding is:
 
-| Source        | Destination   | 
-|:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
-
-I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
-
-![alt text][image4]
+![alt text][image12]
 
 ####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
