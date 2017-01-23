@@ -26,6 +26,13 @@ The goals / steps of this project are the following:
 [image11]: ./example_images/transform1.png "Transform1"
 [image12]: ./example_images/transform2.png "Transform2"
 [image13]: ./example_images/linefit1.png "Linefit1"
+[image14]: ./example_images/linefit2.png "Linefit2"
+[image15]: ./example_images/final1.png "Final1"
+[image16]: ./example_images/final2.png "Final2"
+[image17]: ./example_images/final3.png "Final3"
+[image18]: ./example_images/final4.png "Final4"
+[image19]: ./example_images/final5.png "Final5"
+[image20]: ./example_images/final6.png "Final6"
 [video1]: ./project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
@@ -99,13 +106,19 @@ The code for my line detection is located under `5` in the [IPython notebook](./
 
 ####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+The calculation of the radius of curvature of the line is obtained from the lecture. The vehicle position is determined by calculating the average `x coordinate` of the bottom left and bottom right points of the lines and comparing it with the middle point of the `x-axis`(i.e., 640). The deviation is then converted from pixels to meters. If the deviation is postive, vehicle is to the right of the center. If the deviation is negative, vehicle is to the left of the center. An example is shown as below:
+
+![alt text][image14]
 
 ####6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+The implementation of the whole pipeline is located under `6` in the [IPython notebook](./P4.ipynb). Below are the final images for all six test images:
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
-
-![alt text][image6]
+![alt text][image15]
+![alt text][image16]
+![alt text][image17]
+![alt text][image18]
+![alt text][image19]
+![alt text][image20]
 
 ---
 
