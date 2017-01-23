@@ -83,7 +83,7 @@ def mag_thresh(img, sobel_kernel = 3, mag_thresh = (0, 255)):
 
     # Return the binary image
     return binary_output
-    
+
 # Define a function to threshold an image for a given range and Sobel kernel
 def dir_threshold(img, sobel_kernel=3, thresh=(0, np.pi/2)):
     # Grayscale
