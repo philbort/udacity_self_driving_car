@@ -15,10 +15,12 @@ The goals / steps of this project are the following:
 
 [image1]: ./example_images/undistorted1.png "Undistorted1"
 [image2]: ./example_images/undistorted2.png "Undistorted2"
-[image3]: ./examples/binary_combo_example.jpg "Binary Example"
-[image4]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
+[image3]: ./example_images/undistorted3.png "Undistorted3"
+[image4]: ./example_images/undistorted4.png "Undistorted4"
+[image5]: ./example_images/undistorted5.png "Undistorted5"
+[image6]: ./example_images/undistorted6.png "Undistorted6"
+[image7]: ./example_images/undistorted7.png "Undistorted7"
+[image8]: ./example_images/undistorted8.png "Undistorted8"
 [video1]: ./project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
@@ -49,6 +51,15 @@ The calibration result is saved as a `pickle` for future uses.
 ###Pipeline (single images)
 
 ####1. Provide an example of a distortion-corrected image.
+The comparison between the test images and their undistorted images are shown below. Although it is pretty hard to tell the differences from naked eyes.
+
+![alt text][image3]
+![alt text][image4]
+![alt text][image5]
+![alt text][image6]
+![alt text][image7]
+![alt text][image8]
+
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
 ![alt text][image2]
 ####2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
