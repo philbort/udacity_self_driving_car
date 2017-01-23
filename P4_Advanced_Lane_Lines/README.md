@@ -33,7 +33,7 @@ The goals / steps of this project are the following:
 [image18]: ./example_images/final4.png "Final4"
 [image19]: ./example_images/final5.png "Final5"
 [image20]: ./example_images/final6.png "Final6"
-[video1]: ./project_video.mp4 "Video"
+[video1]: ./videos/proc_project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
@@ -126,7 +126,7 @@ The implementation of the whole pipeline is located under `6` in the [IPython no
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](video1)
 
 ---
 
