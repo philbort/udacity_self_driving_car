@@ -25,6 +25,7 @@ The goals / steps of this project are the following:
 [image10]: ./example_images/threshold1.png "Threshold1"
 [image11]: ./example_images/transform1.png "Transform1"
 [image12]: ./example_images/transform2.png "Transform2"
+[image13]: ./example_images/linefit1.png "Linefit1"
 [video1]: ./project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
@@ -68,7 +69,15 @@ To demonstrate this step, I will describe how I apply the distortion correction 
 ![alt text][image9]
 
 ####2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps are under `4` in the [IPython notebook](./P4.ipynb).  Here's an example of my output for this step of the test image:
+I used a combination of color and gradient thresholds to generate a binary image (thresholding steps are under `4` in the [IPython notebook](./P4.ipynb).  The thresholds include:
+
+ 1. `Sobel` on `x` direction
+ 2. `Yellow` and `white` color detection from `RGB`
+ 3. `Yellow` and `white` color detection from `HSV`
+ 4. `Yellow` and `white` color detection from `HLS`
+ 5. `S channel` from `HLS`
+
+A lot of credits are given to the community on `Slack` for the various ideas. The numbers for the thresholds are all hard-coded for now. A more robust approach will be explored later. Here's an example of my output for this step of the test image:
 
 ![alt text][image10]
 
@@ -84,9 +93,9 @@ And an example of a transformed image after thresholding is:
 
 ####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+The code for my line detection is located under `5` in the [IPython notebook](./P4.ipynb). I use a histogram to find the locations of the maximum pixels along the `y-axis` and assume those are the locations of the points on the line. A `RejectOutlier` function is used to compare the `x-axis` value of all the points to their median value and reject the ones who are far away from the median. Last, a 2nd order polynomial is used to fit the lane lines such as:
 
-![alt text][image5]
+![alt text][image13]
 
 ####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
