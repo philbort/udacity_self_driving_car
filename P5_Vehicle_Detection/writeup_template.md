@@ -29,7 +29,7 @@ The goals / steps of this project are the following:
 [image13]: ./output_images/detection_example4.png
 [image14]: ./output_images/detection_example5.png
 [image15]: ./output_images/detection_example6.png
-[video1]: ./project_video.mp4
+[video1]: ./proc_project_video.mp4
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
@@ -82,7 +82,7 @@ Below is an example image of my sliding windows.
 
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to try to minimize false positives and reliably detect cars?
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Ultimately I searched on three scales using HLS 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images with their respective heatmaps:
 
 ![alt text][image10]
 ![alt text][image11]
@@ -98,22 +98,18 @@ Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spat
 ### Video Implementation
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./proc_project_video.mp4)
 
 
 ####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
-I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used blob detection in Sci-kit Image (Determinant of a Hessian [`skimage.feature.blob_doh()`](http://scikit-image.org/docs/dev/auto_examples/plot_blob.html) worked best for me) to identify individual blobs in the heatmap and then determined the extent of each blob using [`skimage.morphology.watershed()`](http://scikit-image.org/docs/dev/auto_examples/plot_watershed.html). I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
-
-Here's an example result showing the heatmap and bounding boxes overlaid on a frame of video:
-
-![alt text][image5]
-
+I aggregated up to 5 consecutive heatmaps to get the average classification out to minimize false positives. The idea is usually the false positives do not appear in consecutive frames. After putting the consecutive heatmaps together, I was able to eliminate most of the false positives.
 ---
 
 ###Discussion
 
 ####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+The main issue right now is my pipeline runs very slow. Because I'm doing HOG transformations on all the sliding windows. The correct way as suggested by [Ryan Keenan](https://www.youtube.com/watch?v=P2zwrTM8ueA) is to do one HOG transformation on the entire image and then do sliding windows on the HOG image. The implementation is far more complicated and I will try to get it done in the future update.
+
 
