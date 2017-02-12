@@ -61,7 +61,7 @@ I tried various combinations of parameters and realize the default values (see a
 
 ####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a linear SVM using...
+I trained a linear SVM using the HOG output on the `hls` channle of the images as well as the `color histogram` and the `bin spatials`. A `CalibratedClassifierCV` is used to wrap around the `LinearSVC` in order to get the predict probability, instead of prediction of `0` or `1`, to output. This can help to eliminate false positives in the pipeline. 20% of the training data is splitted to the test data, The linear SVM is able to achieve test accuracy of `0.9943`.
 
 ###Sliding Window Search
 
