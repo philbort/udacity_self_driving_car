@@ -22,6 +22,13 @@ The goals / steps of this project are the following:
 [image6]: ./output_images/hog_not_car1.png
 [image7]: ./output_images/hog_not_car2.png
 [image8]: ./output_images/hog_not_car3.png
+[image9]: ./output_images/sliding_window_example.png
+[image10]: ./output_images/detection_example1.png
+[image11]: ./output_images/detection_example2.png
+[image12]: ./output_images/detection_example3.png
+[image13]: ./output_images/detection_example4.png
+[image14]: ./output_images/detection_example5.png
+[image15]: ./output_images/detection_example6.png
 [video1]: ./project_video.mp4
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
@@ -67,15 +74,25 @@ I trained a linear SVM using the HOG output on the `hls` channle of the images a
 
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+I use three different sizes of windows to search `64 by 64`, `96 by 96`, and `128 by 128`. For the `y-axis`, the search is limited only from `400` to `600` so we don't have to search the sky or the nose of the car. For the `x-axis`, we only search from `600` to `1280` as we don't have cars on the left side. This will only work for the current video. If we are not in the left most lane, we have to modify the values to cover the potential cars on the left side as well.
 
-![alt text][image3]
+Below is an example image of my sliding windows.
+
+![alt text][image9] 
 
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to try to minimize false positives and reliably detect cars?
 
 Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
 
-![alt text][image4]
+![alt text][image10]
+![alt text][image11]
+![alt text][image12]
+![alt text][image13]
+![alt text][image14]
+![alt text][image15]
+
+
+
 ---
 
 ### Video Implementation
