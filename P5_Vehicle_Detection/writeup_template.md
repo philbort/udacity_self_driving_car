@@ -104,6 +104,7 @@ Here's a [link to my video result](./proc_project_video.mp4)
 ####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
 I aggregated up to 5 consecutive heatmaps to get the average classification out to minimize false positives. The idea is usually the false positives do not appear in consecutive frames. After putting the consecutive heatmaps together, I was able to eliminate most of the false positives.
+
 ---
 
 ###Discussion
