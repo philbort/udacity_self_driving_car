@@ -230,8 +230,8 @@ def search_windows(img, windows, clf, scaler, color_space='RGB',
                             orient=orient, pix_per_cell=pix_per_cell, 
                             cell_per_block=cell_per_block, 
                             hog_channel=hog_channel,
-                            spatial_feat=False,
-                            hist_feat=False,
+                            spatial_feat=True,
+                            hist_feat=True,
                             hog_feat=True
                             )
         #5) Scale extracted features to be fed to classifier
