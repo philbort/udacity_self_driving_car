@@ -1,4 +1,6 @@
-# [Udacity Self Driving Car Nanodegree](https://www.udacity.com/drive)
+# [Udacity Self Driving Car Nanodegree](https://www.udacity.com/course/self-driving-car-engineer-nanodegree--nd013) 
+[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
+
 
 ![ScreenShot](udacity_car.jpeg)
 
