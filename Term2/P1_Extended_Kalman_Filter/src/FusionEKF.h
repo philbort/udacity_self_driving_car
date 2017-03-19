@@ -2,6 +2,7 @@
 #define FusionEKF_H_
 
 #include "measurement_package.h"
+#include "Eigen/Dense"
 #include <vector>
 #include <string>
 #include <fstream>
@@ -36,13 +37,14 @@ private:
 
   // previous timestamp
   long previous_timestamp_;
+  int delta_time_;
 
   // tool object used to compute Jacobian and RMSE
   Tools tools;
-  MatrixXd R_laser_;
-  MatrixXd R_radar_;
-  MatrixXd H_laser_;
-  MatrixXd Hj_;
+  Eigen::MatrixXd R_laser_;
+  Eigen::MatrixXd R_radar_;
+  Eigen::MatrixXd H_laser_;
+  Eigen::MatrixXd Hj_;
 };
 
 #endif /* FusionEKF_H_ */

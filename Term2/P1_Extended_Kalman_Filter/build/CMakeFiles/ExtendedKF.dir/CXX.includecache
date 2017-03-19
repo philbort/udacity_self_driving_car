@@ -1029,6 +1029,8 @@ iostream
 /Users/phduan/Documents/git/Udacity_Self_Driving_Car/Term2/P1_Extended_Kalman_Filter/src/FusionEKF.h
 measurement_package.h
 /Users/phduan/Documents/git/Udacity_Self_Driving_Car/Term2/P1_Extended_Kalman_Filter/src/measurement_package.h
+Eigen/Dense
+/Users/phduan/Documents/git/Udacity_Self_Driving_Car/Term2/P1_Extended_Kalman_Filter/src/Eigen/Dense
 vector
 -
 string
@@ -1078,6 +1080,8 @@ Eigen/Dense
 
 /Users/phduan/Documents/git/Udacity_Self_Driving_Car/Term2/P1_Extended_Kalman_Filter/src/tools.cpp
 iostream
+-
+cmath
 -
 tools.h
 /Users/phduan/Documents/git/Udacity_Self_Driving_Car/Term2/P1_Extended_Kalman_Filter/src/tools.h
