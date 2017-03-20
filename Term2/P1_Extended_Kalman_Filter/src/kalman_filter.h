@@ -54,7 +54,7 @@ public:
    * using the process model
    * @param delta_T Time between k and k+1 in s
    */
-  void Predict();
+  void Predict(long delta_T = 1);
 
   /**
    * Updates the state by using standard Kalman Filter equations
@@ -68,6 +68,8 @@ public:
    */
   void UpdateEKF(const Eigen::VectorXd &z);
 
+private:
+  long delta_T_;
 };
 
 #endif /* KALMAN_FILTER_H_ */

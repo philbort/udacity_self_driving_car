@@ -19,7 +19,7 @@ public:
   /**
   * Destructor.
   */
-  virtual ~FusionEKF();
+  ~FusionEKF() {}
 
   /**
   * Run the whole flow of the Kalman Filter from here.
@@ -37,7 +37,7 @@ private:
 
   // previous timestamp
   long previous_timestamp_;
-  int delta_time_;
+  long delta_time_;
 
   // tool object used to compute Jacobian and RMSE
   Tools tools;
