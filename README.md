@@ -26,4 +26,4 @@ This repository contains all the projects I have completed for the [Self Driving
 
 | #  | Title           |  Solution       | Techniques      | Libraries      | Dataset  |
 :---:|:--------------- | :-------------- | :-------------- | :--------------| :--------------
-| 1 | [Extended Kalman Filter](Term2/P1_Extended_Kalman_Filter/) | [C++](Term2/P1_Extended_Kalman_Filter/src/) | [Extended Kalman Filter](https://en.wikipedia.org/wiki/Extended_Kalman_filter) | [Eigen](http://eigen.tuxfamily.org/) | [Laser & Radar](Term2/P1_Extended_Kalman_Filter/data/) |
+| 1 | [Extended Kalman Filter](Term2/P1_Extended_Kalman_Filter/) | [C++](Term2/P1_Extended_Kalman_Filter/src/) | [Extended Kalman Filter](https://en.wikipedia.org/wiki/Extended_Kalman_filter), [Lidar](https://en.wikipedia.org/wiki/Lidar), [Radar](https://en.wikipedia.org/wiki/Radar) | [Eigen](http://eigen.tuxfamily.org/) | [Laser & Radar](Term2/P1_Extended_Kalman_Filter/data/) |
