@@ -5,6 +5,11 @@ using namespace std;
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
+// -----------------------------------------------------------------------------
+// @brief  Constructor
+//
+// @param[in] n    State vector dimension
+// -----------------------------------------------------------------------------
 FusionEKF::FusionEKF
 (
   int n
@@ -19,6 +24,13 @@ FusionEKF::FusionEKF
 {
 }
 
+// -----------------------------------------------------------------------------
+// @brief  ProcessMeasurement
+//
+// Process the measurement package.
+//
+// @param[in/out] measurement_pack    Measurement package
+// -----------------------------------------------------------------------------
 bool FusionEKF::ProcessMeasurement
 (
   MeasurementPackage &measurement_pack
@@ -34,14 +46,9 @@ bool FusionEKF::ProcessMeasurement
    ****************************************************************************/
   if (!is_initialized_) 
   {
-    /**
-      * Initialize the state ekf_.x_ with the first measurement.
-    */
+    // Initialize the state vector with the first measurement.
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) 
     {
-      // Convert radar from polar to cartesian coordinates and initialize state
-      // output the estimation in the cartesian coordinates. We do the conversion to
-      // cartesian because we always want x_ in cartesian coordinates.
       const double rho = z(0);
       const double phi = z(1);
       ekf_.x_ << rho * cos(phi), rho * sin(phi), 0, 0;
@@ -51,6 +58,7 @@ bool FusionEKF::ProcessMeasurement
       ekf_.x_ << z(0), z(1), 0, 0;
     }
 
+    // Initialize the state covariance matrix
     ekf_.P_ << 1, 0,    0,    0,
                0, 1,    0,    0,
                0, 0, 1000,    0,
@@ -63,9 +71,7 @@ bool FusionEKF::ProcessMeasurement
     return true;
   }
 
-  /*****************************************************************************
-   *  Prediction
-   ****************************************************************************/
+  // Time Update
   const double dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1.0e6;
   const double dt2 = dt * dt;
   const double dt3 = dt * dt2;
@@ -74,9 +80,9 @@ bool FusionEKF::ProcessMeasurement
   previous_timestamp_ = measurement_pack.timestamp_;
 
   F_ << 1, 0, dt,  0,
-             0, 1,  0, dt,
-             0, 0,  1,  0,
-             0, 0,  0,  1;
+        0, 1,  0, dt,
+        0, 0,  1,  0,
+        0, 0,  0,  1;
 
   Q_ << (dt4 / 4.0) * noise_ax,                      0, (dt3 / 2.0) * noise_ax,                      0,
                              0, (dt4 / 4.0) * noise_ay,                      0, (dt3 / 2.0) * noise_ay,
@@ -85,9 +91,7 @@ bool FusionEKF::ProcessMeasurement
 
   ekf_.Predict(F_, Q_);
 
-  /*****************************************************************************
-   *  Measurement Update
-   ****************************************************************************/
+  // Measurement Update
   measurement_pack.Update(ekf_);
 
   return true;

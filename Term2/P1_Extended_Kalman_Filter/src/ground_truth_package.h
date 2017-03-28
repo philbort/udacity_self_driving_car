@@ -13,7 +13,8 @@ public:
     LASER,
     RADAR
   } sensor_type_;
-
+  
+  // Ground truth
   Eigen::VectorXd gt_values_;
 
 };

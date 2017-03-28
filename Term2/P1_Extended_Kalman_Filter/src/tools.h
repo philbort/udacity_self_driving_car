@@ -7,22 +7,26 @@
 class Tools 
 {
 public:
-  /**
-  * Constructor.
-  */
+  // -----------------------------------------------------------------------------
+  // @brief  Constructor
+  // -----------------------------------------------------------------------------
   Tools() {}
 
-  /**
-  * Destructor.
-  */
-  ~Tools(){}
+  // -----------------------------------------------------------------------------
+  // @brief  Destructor
+  // -----------------------------------------------------------------------------
+  virtual ~Tools(){}
 
-  /**
-  * A helper method to calculate RMSE.
-  */
+  // -----------------------------------------------------------------------------
+  // @brief  CalculateRMSE
+  //
+  // A helper method to calculate the root-mean-squared error.
+  //
+  // @param[in] estimations    estimation vector
+  // @param[in] ground_truth   ground truth vector
+  // -----------------------------------------------------------------------------
   Eigen::VectorXd CalculateRMSE(const std::vector<Eigen::VectorXd> &estimations, 
                                 const std::vector<Eigen::VectorXd> &ground_truth);
-
 };
 
 #endif /* TOOLS_H_ */

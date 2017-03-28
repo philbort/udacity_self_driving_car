@@ -9,43 +9,48 @@
 class FusionEKF 
 {
 public:
-  /**
-  * Constructor.
-  */
+  // -----------------------------------------------------------------------------
+  // @brief  Constructor
+  //
+  // @param[in] n    State vector dimension
+  // -----------------------------------------------------------------------------
   FusionEKF(int n);
 
-  /**
-  * Destructor.
-  */
-  ~FusionEKF() {}
+  // -----------------------------------------------------------------------------
+  // @brief  Destructor
+  // -----------------------------------------------------------------------------
+  virtual ~FusionEKF() {}
 
-  /**
-  * Run the whole flow of the Kalman Filter from here.
-  */
+  // -----------------------------------------------------------------------------
+  // @brief  ProcessMeasurement
+  //
+  // Process the measurement package.
+  //
+  // @param[in/out] measurement_pack    Measurement package
+  // -----------------------------------------------------------------------------
   bool ProcessMeasurement(MeasurementPackage &measurement_pack);
 
-  /**
-  * Kalman Filter update and prediction math lives in here.
-  */
+  // Kalman Filter 
   KalmanFilter ekf_;
 
 private:
-  // check whether the tracking toolbox was initialized or not (first measurement)
+
+  // Initialization flag
   bool is_initialized_;
 
   // previous timestamp
   long long previous_timestamp_;
 
-  // tool object used to compute Jacobian and RMSE
+  // tool object used to compute RMSE
   Tools tools;
 
   // State transition matrix
   Eigen::MatrixXd F_;
 
-  // process covariance matrix
+  // Process noise covariance matrix
   Eigen::MatrixXd Q_;
 
-  //acceleration noise components
+  // Acceleration noise components
   double noise_ax;
   double noise_ay;
 };

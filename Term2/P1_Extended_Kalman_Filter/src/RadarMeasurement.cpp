@@ -5,6 +5,9 @@ using namespace std;
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
+// -----------------------------------------------------------------------------
+// @brief  Constructor
+// -----------------------------------------------------------------------------
 RadarMeasurement::RadarMeasurement()
 : H_(3, 4)
 , R_(3, 3)
@@ -14,6 +17,13 @@ RadarMeasurement::RadarMeasurement()
            0,      0, 0.09;
 }
 
+// -----------------------------------------------------------------------------
+// @brief  Update
+//
+// Measurement update for radar
+//
+// @param[in/out] ekf    Extended Kalman filter used for update
+// -----------------------------------------------------------------------------
 void RadarMeasurement::Update
 (
 	KalmanFilter &ekf
@@ -23,6 +33,13 @@ void RadarMeasurement::Update
   ekf.UpdateEKF(raw_measurements_, H_, R_);
 }
 
+// -----------------------------------------------------------------------------
+// @brief  CalculateJacobian
+//
+// Calculate Jacobian for the radar measurement
+//
+// @param[in] x_state   Kalman filter state vector
+// -----------------------------------------------------------------------------
 MatrixXd RadarMeasurement::CalculateJacobian
 (
   const VectorXd &x_state

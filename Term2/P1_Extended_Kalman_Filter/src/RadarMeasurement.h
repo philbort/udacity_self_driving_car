@@ -9,17 +9,40 @@
 class RadarMeasurement : public MeasurementPackage 
 {
 public:
-    RadarMeasurement();
+  // -----------------------------------------------------------------------------
+  // @brief  Constructor
+  // -----------------------------------------------------------------------------
+  RadarMeasurement();
 
-    ~RadarMeasurement() {}
+  // -----------------------------------------------------------------------------
+  // @brief  Destructor
+  // -----------------------------------------------------------------------------
+  ~RadarMeasurement() {}
 
-    void Update(KalmanFilter &ekf);
+  // -----------------------------------------------------------------------------
+  // @brief  Update
+  //
+  // Measurement update for radar
+  //
+  // @param[in/out] ekf    Extended Kalman filter used for update
+  // -----------------------------------------------------------------------------
+  void Update(KalmanFilter &ekf);
 
-    Eigen::MatrixXd CalculateJacobian(const Eigen::VectorXd& x_state);
+  // -----------------------------------------------------------------------------
+  // @brief  CalculateJacobian
+  //
+  // Calculate Jacobian for the radar measurement
+  //
+  // @param[in] x_state   Kalman filter state vector
+  // -----------------------------------------------------------------------------
+  Eigen::MatrixXd CalculateJacobian(const Eigen::VectorXd& x_state);
 
 private:
-    Eigen::MatrixXd R_;
-    Eigen::MatrixXd H_;
+  // Measurement noise covariance matrix
+  Eigen::MatrixXd R_;
+
+  // Meausrement design matrix
+  Eigen::MatrixXd H_;
 };
 
 

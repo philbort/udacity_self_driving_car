@@ -4,6 +4,14 @@
 using namespace std;
 using Eigen::VectorXd;
 
+// -----------------------------------------------------------------------------
+// @brief  CalculateRMSE
+//
+// A helper method to calculate the root-mean-squared error.
+//
+// @param[in] estimations    estimation vector
+// @param[in] ground_truth   ground truth vector
+// -----------------------------------------------------------------------------
 VectorXd Tools::CalculateRMSE
 (
   const vector<VectorXd> &estimations,

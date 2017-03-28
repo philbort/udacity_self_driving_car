@@ -8,15 +8,31 @@
 class LaserMeasurement : public MeasurementPackage 
 {
 public:
-    LaserMeasurement();
+  // -----------------------------------------------------------------------------
+  // @brief  Constructor
+  // -----------------------------------------------------------------------------
+  LaserMeasurement();
 
-    ~LaserMeasurement() {}
+  // -----------------------------------------------------------------------------
+  // @brief  Destructor
+  // -----------------------------------------------------------------------------
+  ~LaserMeasurement() {}
 
-    void Update(KalmanFilter &ekf);
+  // -----------------------------------------------------------------------------
+  // @brief  Update
+  //
+  // Measurement update for laser
+  //
+  // @param[in/out] ekf    Extended Kalman filter used for update
+  // -----------------------------------------------------------------------------
+  void Update(KalmanFilter &ekf);
 
 private:
-    Eigen::MatrixXd R_;
-    Eigen::MatrixXd H_;
+  // Measurement noise covariance matrix
+  Eigen::MatrixXd R_;
+
+  // Measurement design matrix
+  Eigen::MatrixXd H_;
 };
 
 
