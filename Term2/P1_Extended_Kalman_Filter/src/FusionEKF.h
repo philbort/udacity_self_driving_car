@@ -1,10 +1,10 @@
 #ifndef FusionEKF_H_
 #define FusionEKF_H_
 
+#include <vector>
 #include "measurement_package.h"
 #include "Eigen/Dense"
 #include "kalman_filter.h"
-#include "tools.h"
 
 class FusionEKF 
 {
@@ -30,6 +30,17 @@ public:
   // -----------------------------------------------------------------------------
   bool ProcessMeasurement(MeasurementPackage &measurement_pack);
 
+  // -----------------------------------------------------------------------------
+  // @brief  CalculateRMSE
+  //
+  // Function to calculate the root-mean-squared error.
+  //
+  // @param[in] estimations    estimation vector
+  // @param[in] ground_truth   ground truth vector
+  // -----------------------------------------------------------------------------
+  Eigen::VectorXd CalculateRMSE(const std::vector<Eigen::VectorXd> &estimations, 
+                                const std::vector<Eigen::VectorXd> &ground_truth);
+
   // Kalman Filter 
   KalmanFilter ekf_;
 
@@ -41,9 +52,6 @@ private:
   // previous timestamp
   long long previous_timestamp_;
 
-  // tool object used to compute RMSE
-  Tools tools;
-
   // State transition matrix
   Eigen::MatrixXd F_;
 
@@ -51,8 +59,8 @@ private:
   Eigen::MatrixXd Q_;
 
   // Acceleration noise components
-  double noise_ax;
-  double noise_ay;
+  double noise_ax_;
+  double noise_ay_;
 };
 
 #endif /* FusionEKF_H_ */

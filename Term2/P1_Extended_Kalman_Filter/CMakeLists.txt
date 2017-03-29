@@ -8,7 +8,6 @@ set(sources
     src/FusionEKF.cpp
     src/kalman_filter.cpp
     src/main.cpp
-    src/tools.cpp
     src/LaserMeasurement.cpp
     src/LaserMeasurement.h
     src/RadarMeasurement.cpp

@@ -191,7 +191,7 @@ int main
 
   // compute the accuracy (RMSE)
   cout << "Accuracy - RMSE:" << endl;
-  cout << Tools().CalculateRMSE(estimations, ground_truth) << endl;
+  cout << fusionEKF.CalculateRMSE(estimations, ground_truth) << endl;
 
   // close files
   if (out_file_.is_open())  out_file_.close();
