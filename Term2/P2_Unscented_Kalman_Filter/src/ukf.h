@@ -8,10 +8,9 @@
 #include <fstream>
 #include "tools.h"
 
-using Eigen::MatrixXd;
-using Eigen::VectorXd;
 
-class UKF {
+class UKF 
+{
 public:
 
   ///* initially set to false, set to true in first call of ProcessMeasurement
@@ -24,13 +23,13 @@ public:
   bool use_radar_;
 
   ///* state vector: [pos1 pos2 vel_abs yaw_angle yaw_rate] in SI units and rad
-  VectorXd x_;
+  Eigen::VectorXd x_;
 
   ///* state covariance matrix
-  MatrixXd P_;
+  Eigen::MatrixXd P_;
 
   ///* predicted sigma points matrix
-  MatrixXd Xsig_pred_;
+  Eigen::MatrixXd Xsig_pred_;
 
   ///* time when the state is true, in us
   long long time_us_;
@@ -57,7 +56,7 @@ public:
   double std_radrd_ ;
 
   ///* Weights of sigma points
-  VectorXd weights_;
+  Eigen::VectorXd weights_;
 
   ///* State dimension
   int n_x_;

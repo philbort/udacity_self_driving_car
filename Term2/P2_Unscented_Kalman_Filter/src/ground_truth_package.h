@@ -3,11 +3,13 @@
 
 #include "Eigen/Dense"
 
-class GroundTruthPackage {
+class GroundTruthPackage 
+{
 public:
   long long timestamp_;
 
-  enum SensorType{
+  enum SensorType
+  {
     LASER,
     RADAR
   } sensor_type_;
