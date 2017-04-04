@@ -1,5 +1,6 @@
 #ifndef TOOLS_H_
 #define TOOLS_H_
+
 #include <vector>
 #include "Eigen/Dense"
 
@@ -8,12 +9,12 @@ public:
   /**
   * Constructor.
   */
-  Tools();
+  Tools() {}
 
   /**
   * Destructor.
   */
-  virtual ~Tools();
+  virtual ~Tools(){}
 
   /**
   * A helper method to calculate RMSE.

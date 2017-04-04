@@ -3,11 +3,6 @@
 
 #include "measurement_package.h"
 #include "Eigen/Dense"
-#include <vector>
-#include <string>
-#include <fstream>
-#include "tools.h"
-
 
 class UKF 
 {
@@ -81,7 +76,7 @@ public:
   /**
    * Destructor
    */
-  virtual ~UKF();
+  virtual ~UKF(){}
 
   /**
    * ProcessMeasurement
