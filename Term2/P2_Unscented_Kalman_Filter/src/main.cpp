@@ -8,7 +8,6 @@
 #include "ukf.h"
 #include "ground_truth_package.h"
 #include "measurement_package.h"
-#include "tools.h"
 
 using namespace std;
 using Eigen::MatrixXd;
@@ -150,7 +149,7 @@ int main
   }
 
   // Create a UKF instance
-  UKF ukf;
+  UKF ukf(5);
 
   // used to compute the RMSE later
   vector<VectorXd> estimations;
@@ -237,8 +236,7 @@ int main
   }
 
   // compute the accuracy (RMSE)
-  Tools tools;
-  cout << "Accuracy - RMSE:" << endl << tools.CalculateRMSE(estimations, ground_truth) << endl;
+  cout << "Accuracy - RMSE:" << endl << ukf.CalculateRMSE(estimations, ground_truth) << endl;
 
   // close files
   if (out_file_.is_open())

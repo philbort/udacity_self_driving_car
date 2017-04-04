@@ -1,3 +1,4 @@
+#include <iostream>
 #include "ukf.h"
 
 using namespace std;
@@ -7,15 +8,19 @@ using Eigen::VectorXd;
 /**
  * Initializes Unscented Kalman filter
  */
-UKF::UKF()
+UKF::UKF
+(
+  int n
+)
 : is_initialized_(false)
 , use_laser_(true)
 , use_radar_(true)
-, n_x_(5)
-, n_aug_(7)
+, n_x_(n)
+, n_aug_(n_x_ + 2)
 , lambda_(3 - n_x_)
-, x_(5)
-, P_(5, 5)
+, x_(n)
+, P_(n, n)
+, time_us_(0)
 , std_a_(30)
 , std_yawdd_(30)
 , std_laspx_(0.15)
@@ -114,7 +119,7 @@ void UKF::Prediction(double delta_t)
   double p_x, p_y, v, yaw, yawd, nu_a, nu_yawdd, 
          px_p, py_p, v_p, yaw_p, yawd_p;
 
-  for(int i = 0; i< 2 * n_aug_ + 1; i++)
+  for(int i = 0; i < 2 * n_aug_ + 1; i++)
   {
     //extract values for better readability
     p_x = Xsig_aug(0, i);
@@ -173,7 +178,7 @@ void UKF::Prediction(double delta_t)
     while(x_diff(3) > M_PI) x_diff(3) -= 2 * M_PI;
     while(x_diff(3) < -M_PI) x_diff(3) += 2 * M_PI;
 
-    P_ = P_ + weights_(i) * x_diff * x_diff.transpose();
+    P_ += weights_(i) * x_diff * x_diff.transpose();
   }
 
 }
@@ -206,4 +211,35 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
   You'll also need to calculate the radar NIS.
   */
+}
+
+VectorXd UKF::CalculateRMSE
+(
+  const vector<VectorXd> &estimations,
+  const vector<VectorXd> &ground_truth
+) 
+{
+  const size_t n = estimations.size();
+  const size_t m = ground_truth.size();
+
+  if(n + m == 0)
+  {
+    cout << "estimations and ground truth vectors must not be empty" << endl;
+    return VectorXd::Zero(4);
+  }
+  if(n != m)
+  {
+    cout << "estimations and ground truth vectors ust be of equal dimensions." << endl;
+    return VectorXd::Zero(4);
+  }
+
+  // Squared error initialized to zeros
+  VectorXd se = VectorXd::Zero(4);
+
+  // Accumulate the squared errors
+  for (int i = 0; i < n; ++i) 
+    se += static_cast<VectorXd> ((estimations[i]-ground_truth[i]).array().square());
+
+  // Return root-mean-squared error
+  return (se.array()/n).sqrt();
 }

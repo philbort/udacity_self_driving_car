@@ -1,6 +1,7 @@
 #ifndef UKF_H
 #define UKF_H
 
+#include <vector>
 #include "measurement_package.h"
 #include "Eigen/Dense"
 
@@ -71,7 +72,7 @@ public:
   /**
    * Constructor
    */
-  UKF();
+  UKF(int n);
 
   /**
    * Destructor
@@ -102,6 +103,12 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+
+  /**
+  * A helper method to calculate RMSE.
+  */
+  Eigen::VectorXd CalculateRMSE(const std::vector<Eigen::VectorXd> &estimations, 
+                                const std::vector<Eigen::VectorXd> &ground_truth);
 };
 
 #endif /* UKF_H */
