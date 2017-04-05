@@ -20,6 +20,7 @@ UKF::UKF
 , lambda_(3 - n_x_)
 , x_(n)
 , P_(n, n)
+, Xsig_pred_(n, 2 * (n + 2) + 1)
 , time_us_(0)
 , std_a_(30)
 , std_yawdd_(30)
@@ -28,14 +29,19 @@ UKF::UKF
 , std_radr_(0.3)
 , std_radphi_(0.03)
 , std_radrd_(0.3)
+, weights_(2 * (n + 2) + 1)
+, H_laser_(2, n)
+, R_laser_(2, 2)
 {
-  /**
-  TODO:
+  // Set weights
+  weights_.fill(1 / (2 * (lambda_ + n_aug_)));
+  weights_(0) = lambda_/(lambda_ + n_aug_);
 
-  Complete the initialization. See ukf.h for other member properties.
+  H_laser_ << 1, 0, 0, 0, 0,
+              0, 1, 0, 0, 0;
 
-  Hint: one or more values initialized above might be wildly off...
-  */
+  R_laser_ << std_laspx_ * std_laspx_, 0,
+              0, std_laspy_ * std_laspy_;
 }
 
 
@@ -43,17 +49,30 @@ UKF::UKF
  * @param {MeasurementPackage} meas_package The latest measurement data of
  * either radar or laser.
  */
-void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
+void UKF::ProcessMeasurement
+( 
+  const MeasurementPackage meas_package
+) 
+{
+  const VectorXd z = meas_package.raw_measurements_;
+
   if(!is_initialized_)
   {
     if(meas_package.sensor_type_ == MeasurementPackage::RADAR)
     {
-
+      const double rho = z(0);
+      const double phi = z(1);
+      x_ << rho * cos(phi), rho * sin(phi), 0, 0, 0;
     }
     else if(meas_package.sensor_type_ == MeasurementPackage::LASER)
-    {
+      x_ << z(0), z(1), 0, 0, 0;
 
-    }
+    P_ <<   1,  0,    0,  0,  0,
+            0,  1,    0,  0,  0,
+            0,  0, 1000,  0,  0,
+            0,  0,    0, 10,  0,
+            0,  0,    0,  0, 10;
+
     time_us_ = meas_package.timestamp_;
     is_initialized_ = true;
     return;
@@ -63,14 +82,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   Prediction(dt);
   time_us_ = meas_package.timestamp_;
 
-  if(meas_package.sensor_type_ == MeasurementPackage::RADAR)
-  {
+  if(meas_package.sensor_type_ == MeasurementPackage::RADAR && use_radar_)
+    UpdateRadar(z);
+  else if(meas_package.sensor_type_ == MeasurementPackage::LASER && use_laser_)
+    UpdateLidar(z);
 
-  }
-  else if(meas_package.sensor_type_ == MeasurementPackage::LASER)
-  {
-
-  }
 }
 
 /**
@@ -78,7 +94,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  * @param {double} delta_t the change in time (in seconds) between the last
  * measurement and this one.
  */
-void UKF::Prediction(double delta_t) 
+void UKF::Prediction(const double delta_t) 
 {
 
   /****************************************************
@@ -185,24 +201,42 @@ void UKF::Prediction(double delta_t)
 
 /**
  * Updates the state and the state covariance matrix using a laser measurement.
- * @param {MeasurementPackage} meas_package
+ * @param {VectorXd} z measurement vector
  */
-void UKF::UpdateLidar(MeasurementPackage meas_package) {
-  /**
-  TODO:
+void UKF::UpdateLidar
+(
+  const VectorXd & z
+) 
+{
+  // Measurement innovation
+  const VectorXd y = z - H_laser_ * x_;
 
-  Complete this function! Use lidar data to update the belief about the object's
-  position. Modify the state vector, x_, and covariance, P_.
+  // Measurement innovation covariance matrix
+  const MatrixXd S = H_laser_ * P_ * H_laser_.transpose() + R_laser_;
 
+  // Kalman gain
+  const MatrixXd K = P_ * H_laser_.transpose() * S.inverse();
+
+  // Update state vector
+  x_ += K * y;
+
+  // Update state covariance matrix
+  P_ = (MatrixXd::Identity(n_x_, n_x_) - K * H_laser_) * P_;
+
+  /*
   You'll also need to calculate the lidar NIS.
   */
 }
 
 /**
  * Updates the state and the state covariance matrix using a radar measurement.
- * @param {MeasurementPackage} meas_package
+ * @param {VectorXd} z measurement vector
  */
-void UKF::UpdateRadar(MeasurementPackage meas_package) {
+void UKF::UpdateRadar
+(
+  const VectorXd & z
+) 
+{
   /**
   TODO:
 
