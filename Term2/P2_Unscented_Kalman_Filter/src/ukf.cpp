@@ -37,6 +37,7 @@ UKF::UKF
   weights_.fill(1 / (2 * (lambda_ + n_aug_)));
   weights_(0) = lambda_/(lambda_ + n_aug_);
 
+  // Set design and covariance matrix for laser
   H_laser_ << 1, 0, 0, 0, 0,
               0, 1, 0, 0, 0;
 
@@ -213,9 +214,10 @@ void UKF::UpdateLidar
 
   // Measurement innovation covariance matrix
   const MatrixXd S = H_laser_ * P_ * H_laser_.transpose() + R_laser_;
+  const MatrixXd S_inv = S.inverse();
 
   // Kalman gain
-  const MatrixXd K = P_ * H_laser_.transpose() * S.inverse();
+  const MatrixXd K = P_ * H_laser_.transpose() * S_inv;
 
   // Update state vector
   x_ += K * y;
@@ -223,9 +225,8 @@ void UKF::UpdateLidar
   // Update state covariance matrix
   P_ = (MatrixXd::Identity(n_x_, n_x_) - K * H_laser_) * P_;
 
-  /*
-  You'll also need to calculate the lidar NIS.
-  */
+  // The current NIS
+  NIS_laser_ = y.transpose() * S_inv * y;
 }
 
 /**

@@ -9,69 +9,72 @@ class UKF
 {
 public:
 
-  ///* initially set to false, set to true in first call of ProcessMeasurement
+  // initially set to false, set to true in first call of ProcessMeasurement
   bool is_initialized_;
 
-  ///* if this is false, laser measurements will be ignored (except for init)
+  // if this is false, laser measurements will be ignored (except for init)
   bool use_laser_;
 
-  ///* if this is false, radar measurements will be ignored (except for init)
+  // if this is false, radar measurements will be ignored (except for init)
   bool use_radar_;
 
-  ///* state vector: [pos1 pos2 vel_abs yaw_angle yaw_rate] in SI units and rad
+  // state vector: [pos1 pos2 vel_abs yaw_angle yaw_rate] in SI units and rad
   Eigen::VectorXd x_;
 
-  ///* state covariance matrix
+  // state covariance matrix
   Eigen::MatrixXd P_;
 
-  ///* predicted sigma points matrix
+  // predicted sigma points matrix
   Eigen::MatrixXd Xsig_pred_;
 
-  ///* time when the state is true, in us
+  // time when the state is true, in us
   long long time_us_;
 
-  ///* Process noise standard deviation longitudinal acceleration in m/s^2
+  // Process noise standard deviation longitudinal acceleration in m/s^2
   double std_a_;
 
-  ///* Process noise standard deviation yaw acceleration in rad/s^2
+  // Process noise standard deviation yaw acceleration in rad/s^2
   double std_yawdd_;
 
-  ///* Laser measurement noise standard deviation position1 in m
+  // Laser measurement noise standard deviation position1 in m
   double std_laspx_;
 
-  ///* Laser measurement noise standard deviation position2 in m
+  // Laser measurement noise standard deviation position2 in m
   double std_laspy_;
 
-  ///* Radar measurement noise standard deviation radius in m
+  // Radar measurement noise standard deviation radius in m
   double std_radr_;
 
-  ///* Radar measurement noise standard deviation angle in rad
+  // Radar measurement noise standard deviation angle in rad
   double std_radphi_;
 
-  ///* Radar measurement noise standard deviation radius change in m/s
+  // Radar measurement noise standard deviation radius change in m/s
   double std_radrd_ ;
 
-  ///* Weights of sigma points
+  // Weights of sigma points
   Eigen::VectorXd weights_;
 
-  ///* State dimension
+  // State dimension
   int n_x_;
 
-  ///* Augmented state dimension
+  // Augmented state dimension
   int n_aug_;
 
-  ///* Sigma point spreading parameter
+  // Sigma point spreading parameter
   double lambda_;
 
-  ///* the current NIS for radar
+  // Normalised Innovation Squared (NIS) for radar
   double NIS_radar_;
 
-  ///* the current NIS for laser
+  // Normalised Innovation Squared (NIS) for laser
   double NIS_laser_;
 
+  // Design matrix for laser
   Eigen::MatrixXd H_laser_;
 
+  // Measurement covariance matrix for laser
   Eigen::MatrixXd R_laser_;
+
   /**
    * Constructor
    */
