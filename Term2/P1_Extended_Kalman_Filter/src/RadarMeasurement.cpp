@@ -24,10 +24,7 @@ RadarMeasurement::RadarMeasurement()
 //
 // @param[in/out] ekf    Extended Kalman filter used for update
 // -----------------------------------------------------------------------------
-void RadarMeasurement::Update
-(
-	KalmanFilter &ekf
-) 
+void RadarMeasurement::Update(KalmanFilter &ekf) 
 {
   H_ = CalculateJacobian(ekf.x_);
   ekf.UpdateEKF(raw_measurements_, H_, R_);
@@ -40,10 +37,7 @@ void RadarMeasurement::Update
 //
 // @param[in] x_state   Kalman filter state vector
 // -----------------------------------------------------------------------------
-MatrixXd RadarMeasurement::CalculateJacobian
-(
-  const VectorXd &x_state
-) 
+MatrixXd RadarMeasurement::CalculateJacobian(const VectorXd &x_state) 
 {
   // Get the state vector elements
   const double px = x_state(0);

@@ -10,10 +10,7 @@ using Eigen::VectorXd;
 //
 // @param[in] n    State vector dimension
 // -----------------------------------------------------------------------------
-FusionEKF::FusionEKF
-(
-  int n
-)
+FusionEKF::FusionEKF(int n)
 : is_initialized_(false)
 , previous_timestamp_(0)
 , F_(n, n)
@@ -31,10 +28,7 @@ FusionEKF::FusionEKF
 //
 // @param[in/out] measurement_pack    Measurement package
 // -----------------------------------------------------------------------------
-bool FusionEKF::ProcessMeasurement
-(
-  MeasurementPackage &measurement_pack
-) 
+bool FusionEKF::ProcessMeasurement(MeasurementPackage &measurement_pack) 
 {
   const VectorXd z = measurement_pack.raw_measurements_;
 
@@ -105,11 +99,8 @@ bool FusionEKF::ProcessMeasurement
 // @param[in] estimations    estimation vector
 // @param[in] ground_truth   ground truth vector
 // -----------------------------------------------------------------------------
-VectorXd FusionEKF::CalculateRMSE
-(
-  const vector<VectorXd> &estimations,
-  const vector<VectorXd> &ground_truth
-) 
+VectorXd FusionEKF::CalculateRMSE(const vector<VectorXd> &estimations,
+                                  const vector<VectorXd> &ground_truth) 
 {
   const size_t n = estimations.size();
   const size_t m = ground_truth.size();

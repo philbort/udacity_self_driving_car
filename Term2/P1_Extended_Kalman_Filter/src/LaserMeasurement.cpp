@@ -23,10 +23,7 @@ LaserMeasurement::LaserMeasurement()
 //
 // @param[in/out] ekf    Extended Kalman filter used for update
 // -----------------------------------------------------------------------------
-void LaserMeasurement::Update
-(
-  KalmanFilter &ekf
-) 
+void LaserMeasurement::Update(KalmanFilter &ekf) 
 {
   ekf.Update(raw_measurements_, H_, R_);
 }

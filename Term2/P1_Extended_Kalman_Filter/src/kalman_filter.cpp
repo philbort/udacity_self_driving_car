@@ -24,11 +24,8 @@ KalmanFilter::KalmanFilter(int n)
 // @param[in] x_in    Initial state vector
 // @param[in] P_in    Initial state vector covariance matrix
 // -----------------------------------------------------------------------------
-void KalmanFilter::Init
-( 
-  const VectorXd &x_in, 
-  const MatrixXd &P_in
-) 
+void KalmanFilter::Init(const VectorXd &x_in, 
+                        const MatrixXd &P_in) 
 {
   x_ = x_in;
   P_ = P_in;
@@ -42,11 +39,8 @@ void KalmanFilter::Init
 // @param[in] F    State transition matrix
 // @param[in] Q    State covariance matrix
 // -----------------------------------------------------------------------------
-void KalmanFilter::Predict
-(
-  const MatrixXd &F,
-  const MatrixXd &Q
-) 
+void KalmanFilter::Predict(const MatrixXd &F,
+                           const MatrixXd &Q) 
 {
   // Propagate state vector
   x_ = F * x_;
@@ -64,12 +58,9 @@ void KalmanFilter::Predict
 // @param[in] H    Measurement design matrix
 // @param[in] R    Measurement noise covariance matrix
 // -----------------------------------------------------------------------------
-void KalmanFilter::Update
-(
-  const VectorXd &z,
-  const Eigen::MatrixXd &H,
-  const Eigen::MatrixXd &R
-) 
+void KalmanFilter::Update(const VectorXd &z,
+                          const Eigen::MatrixXd &H,
+                          const Eigen::MatrixXd &R) 
 {
   // Measurement innovation
   const VectorXd y = z - H * x_;
@@ -96,12 +87,9 @@ void KalmanFilter::Update
 // @param[in] H    Measurement design matrix
 // @param[in] R    Measurement noise covariance matrix
 // -----------------------------------------------------------------------------
-void KalmanFilter::UpdateEKF
-(
-  const VectorXd &z,
-  const Eigen::MatrixXd &H,
-  const Eigen::MatrixXd &R
-) 
+void KalmanFilter::UpdateEKF(const VectorXd &z,
+                             const Eigen::MatrixXd &H,
+                             const Eigen::MatrixXd &R) 
 {
   // Get the individual states
   const float px = x_(0);
