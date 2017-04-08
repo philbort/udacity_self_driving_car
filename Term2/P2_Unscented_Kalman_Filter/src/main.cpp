@@ -13,11 +13,7 @@ using namespace std;
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
-void check_arguments
-(
-  int argc, 
-  char* argv[]
-) 
+void check_arguments(int argc, char* argv[]) 
 {
   string usage_instructions = "Usage instructions: ";
   usage_instructions += argv[0];
@@ -39,13 +35,10 @@ void check_arguments
     exit(EXIT_FAILURE);
 }
 
-void check_files
-(
-  ifstream& in_file, 
-  string& in_name,
-  ofstream& out_file, 
-  string& out_name
-) 
+void check_files(ifstream& in_file, 
+                 string&   in_name,
+                 ofstream& out_file, 
+                 string&   out_name) 
 {
   if (!in_file.is_open()) 
   {
@@ -60,11 +53,7 @@ void check_files
   }
 }
 
-int main
-(
-  int argc, 
-  char* argv[]
-) 
+int main(int argc, char* argv[]) 
 {
 
   check_arguments(argc, argv);
@@ -149,7 +138,7 @@ int main
   }
 
   // Create a UKF instance
-  UKF ukf(5);
+  UKF ukf(5, true, true);
 
   // used to compute the RMSE later
   vector<VectorXd> estimations;

@@ -78,7 +78,7 @@ public:
   /**
    * Constructor
    */
-  UKF(int n);
+  UKF(const int n, const bool use_laser, const bool user_radar);
 
   /**
    * Destructor

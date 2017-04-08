@@ -8,13 +8,12 @@ using Eigen::VectorXd;
 /**
  * Initializes Unscented Kalman filter
  */
-UKF::UKF
-(
-  int n
-)
+UKF::UKF(const int  n,
+         const bool use_laser,
+         const bool user_radar)
 : is_initialized_(false)
-, use_laser_(true)
-, use_radar_(true)
+, use_laser_(use_laser)
+, use_radar_(user_radar)
 , n_x_(n)
 , n_aug_(n_x_ + 2)
 , lambda_(3 - n_x_)
@@ -50,10 +49,7 @@ UKF::UKF
  * @param {MeasurementPackage} meas_package The latest measurement data of
  * either radar or laser.
  */
-void UKF::ProcessMeasurement
-( 
-  const MeasurementPackage meas_package
-) 
+void UKF::ProcessMeasurement(const MeasurementPackage meas_package) 
 {
   const VectorXd z = meas_package.raw_measurements_;
 
@@ -204,10 +200,7 @@ void UKF::Prediction(const double delta_t)
  * Updates the state and the state covariance matrix using a laser measurement.
  * @param {VectorXd} z measurement vector
  */
-void UKF::UpdateLidar
-(
-  const VectorXd & z
-) 
+void UKF::UpdateLidar(const VectorXd & z) 
 {
   // Measurement innovation
   const VectorXd y = z - H_laser_ * x_;
@@ -233,10 +226,7 @@ void UKF::UpdateLidar
  * Updates the state and the state covariance matrix using a radar measurement.
  * @param {VectorXd} z measurement vector
  */
-void UKF::UpdateRadar
-(
-  const VectorXd & z
-) 
+void UKF::UpdateRadar(const VectorXd & z) 
 {
   /**
   TODO:
@@ -248,11 +238,8 @@ void UKF::UpdateRadar
   */
 }
 
-VectorXd UKF::CalculateRMSE
-(
-  const vector<VectorXd> &estimations,
-  const vector<VectorXd> &ground_truth
-) 
+VectorXd UKF::CalculateRMSE(const vector<VectorXd> &estimations,
+                            const vector<VectorXd> &ground_truth) 
 {
   const size_t n = estimations.size();
   const size_t m = ground_truth.size();
