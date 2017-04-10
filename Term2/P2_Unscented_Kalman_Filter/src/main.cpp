@@ -35,10 +35,10 @@ void check_arguments(int argc, char* argv[])
     exit(EXIT_FAILURE);
 }
 
-void check_files(ifstream& in_file, 
-                 string&   in_name,
-                 ofstream& out_file, 
-                 string&   out_name) 
+void check_files(ifstream & in_file, 
+                 string &   in_name,
+                 ofstream & out_file, 
+                 string &   out_name) 
 {
   if (!in_file.is_open()) 
   {
@@ -95,8 +95,7 @@ int main(int argc, char* argv[])
       // read measurements at this timestamp
       meas_package.sensor_type_ = MeasurementPackage::LASER;
       meas_package.raw_measurements_ = VectorXd(2);
-      float px;
-      float py;
+      double px, py;
       iss >> px;
       iss >> py;
       meas_package.raw_measurements_ << px, py;
@@ -111,23 +110,18 @@ int main(int argc, char* argv[])
       // read measurements at this timestamp
       meas_package.sensor_type_ = MeasurementPackage::RADAR;
       meas_package.raw_measurements_ = VectorXd(3);
-      float ro;
-      float phi;
-      float ro_dot;
-      iss >> ro;
+      double rho, phi, rho_dot;
+      iss >> rho;
       iss >> phi;
-      iss >> ro_dot;
-      meas_package.raw_measurements_ << ro, phi, ro_dot;
+      iss >> rho_dot;
+      meas_package.raw_measurements_ << rho, phi, rho_dot;
       iss >> timestamp;
       meas_package.timestamp_ = timestamp;
       measurement_pack_list.push_back(meas_package);
     }
 
       // read ground truth data to compare later
-      float x_gt;
-      float y_gt;
-      float vx_gt;
-      float vy_gt;
+      double x_gt, y_gt, vx_gt, vy_gt;
       iss >> x_gt;
       iss >> y_gt;
       iss >> vx_gt;
@@ -138,7 +132,7 @@ int main(int argc, char* argv[])
   }
 
   // Create a UKF instance
-  UKF ukf(5, true, true);
+  UKF ukf;
 
   // used to compute the RMSE later
   vector<VectorXd> estimations;
@@ -166,8 +160,9 @@ int main(int argc, char* argv[])
 
   for (size_t k = 0; k < number_of_measurements; ++k) 
   {
-    // Call the UKF-based fusion
-    ukf.ProcessMeasurement(measurement_pack_list[k]);
+    // Call the UKF-based fusion, if fails no need to output
+    if(!ukf.ProcessMeasurement(measurement_pack_list[k]))
+      continue;
 
     // output the estimation
     out_file_ << ukf.x_(0) << "\t"; // pos1 - est
@@ -190,10 +185,10 @@ int main(int argc, char* argv[])
     else if (measurement_pack_list[k].sensor_type_ == MeasurementPackage::RADAR) 
     {
       // output the estimation in the cartesian coordinates
-      float ro = measurement_pack_list[k].raw_measurements_(0);
-      float phi = measurement_pack_list[k].raw_measurements_(1);
-      out_file_ << ro * cos(phi) << "\t"; // p1_meas
-      out_file_ << ro * sin(phi) << "\t"; // p2_meas
+      const double rho = measurement_pack_list[k].raw_measurements_(0);
+      const double phi = measurement_pack_list[k].raw_measurements_(1);
+      out_file_ << rho * cos(phi) << "\t"; // p1_meas
+      out_file_ << rho * sin(phi) << "\t"; // p2_meas
     }
 
     // output the ground truth packages
@@ -212,10 +207,10 @@ int main(int argc, char* argv[])
     // convert ukf x vector to cartesian to compare to ground truth
     VectorXd ukf_x_cartesian_ = VectorXd(4);
 
-    float x_estimate_ = ukf.x_(0);
-    float y_estimate_ = ukf.x_(1);
-    float vx_estimate_ = ukf.x_(2) * cos(ukf.x_(3));
-    float vy_estimate_ = ukf.x_(2) * sin(ukf.x_(3));
+    const double x_estimate_ = ukf.x_(0);
+    const double y_estimate_ = ukf.x_(1);
+    const double vx_estimate_ = ukf.x_(2) * cos(ukf.x_(3));
+    const double vy_estimate_ = ukf.x_(2) * sin(ukf.x_(3));
     
     ukf_x_cartesian_ << x_estimate_, y_estimate_, vx_estimate_, vy_estimate_;
     
@@ -228,11 +223,9 @@ int main(int argc, char* argv[])
   cout << "Accuracy - RMSE:" << endl << ukf.CalculateRMSE(estimations, ground_truth) << endl;
 
   // close files
-  if (out_file_.is_open())
-    out_file_.close();
+  if (out_file_.is_open())  out_file_.close();
 
-  if (in_file_.is_open())
-    in_file_.close();
+  if (in_file_.is_open())   in_file_.close();
 
   cout << "Done!" << endl;
   return 0;

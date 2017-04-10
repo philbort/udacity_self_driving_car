@@ -75,46 +75,86 @@ public:
   // Measurement covariance matrix for laser
   Eigen::MatrixXd R_laser_;
 
-  /**
-   * Constructor
-   */
-  UKF(const int n, const bool use_laser, const bool user_radar);
+  /*----------------------------------------------------------------------------
+    @brief  Constructor
 
-  /**
-   * Destructor
-   */
-  virtual ~UKF(){}
+    Initialize all class variables and start the minimum path finder function.
 
-  /**
-   * ProcessMeasurement
-   * @param meas_package The latest measurement data of either radar or laser
-   */
-  void ProcessMeasurement(const MeasurementPackage meas_package);
+    @param[in] n             Size of the state vector
+    @param[in] use_laser     Flag to use laser
+    @param[in] user_radar    Flag to use radar
+   ----------------------------------------------------------------------------*/
+  UKF(const int n = 5, 
+      const bool use_laser = true, 
+      const bool user_radar = true);
 
-  /**
-   * Prediction Predicts sigma points, the state, and the state covariance
-   * matrix
-   * @param delta_t Time between k and k+1 in s
-   */
+  /*-----------------------------------------------------------------------------
+    @brief  Destructor
+   ----------------------------------------------------------------------------*/
+  virtual ~UKF() {}
+
+  /*----------------------------------------------------------------------------
+    @brief  ProcessMeasurement
+
+    Process the filter update given a new measurement.
+
+    @param[in] meas_package    The current measurement package
+
+    @return True if successful, false otherwise.
+  ----------------------------------------------------------------------------*/
+  bool ProcessMeasurement(const MeasurementPackage meas_package);
+
+  /*----------------------------------------------------------------------------
+    @brief  Prediction
+
+    Unscented Kalman filter prediction (time update)
+
+    @param[in] delta_t    Time interval between k and k+1 [s]
+  ----------------------------------------------------------------------------*/
   void Prediction(const double delta_t);
 
-  /**
-   * Updates the state and the state covariance matrix using a laser measurement
-   * @param z measurement vector
-   */
+  /*----------------------------------------------------------------------------
+    @brief  UpdateLidar
+
+    Linear Kalman filter Lidar measurement update
+
+    @param[in] z    Lidar measurement
+  ----------------------------------------------------------------------------*/
   void UpdateLidar(const Eigen::VectorXd & z);
 
-  /**
-   * Updates the state and the state covariance matrix using a radar measurement
-   * @param z measurement vector
-   */
+  /*----------------------------------------------------------------------------
+    @brief  UpdateRadar
+
+    Unscented Kalman filter Radar measurement update
+
+    @param[in] z    Radar measurement
+  ----------------------------------------------------------------------------*/
   void UpdateRadar(const Eigen::VectorXd & z);
 
-  /**
-  * A helper method to calculate RMSE.
-  */
+
+  /*----------------------------------------------------------------------------
+    @brief  CalculateRMSE
+
+    Calculate root-mean-squared error.
+
+    @param[in]  estimations    State estimate vector
+    @param[in]  ground_truth   Gound truth vector
+    
+    @return  RMSE
+  ----------------------------------------------------------------------------*/
   Eigen::VectorXd CalculateRMSE(const std::vector<Eigen::VectorXd> &estimations, 
                                 const std::vector<Eigen::VectorXd> &ground_truth);
+  
+  /*----------------------------------------------------------------------------
+    @brief  NormAngle
+
+    Normalize an angle
+
+    @param[in]  angle    Input angle value
+    
+    @return  Normalized angle value
+  ----------------------------------------------------------------------------*/
+  double NormAngle(const double angle);
 };
 
 #endif /* UKF_H */
