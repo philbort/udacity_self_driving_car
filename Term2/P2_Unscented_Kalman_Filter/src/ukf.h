@@ -9,25 +9,96 @@ class UKF
 {
 public:
 
-  // initially set to false, set to true in first call of ProcessMeasurement
-  bool is_initialized_;
+  /*----------------------------------------------------------------------------
+    @brief  Constructor
 
-  // if this is false, laser measurements will be ignored (except for init)
-  bool use_laser_;
+    Initialize all class variables and start the minimum path finder function.
 
-  // if this is false, radar measurements will be ignored (except for init)
-  bool use_radar_;
+    @param[in] n             Size of the state vector
+    @param[in] use_laser     Flag to use laser
+    @param[in] user_radar    Flag to use radar
+   ----------------------------------------------------------------------------*/
+  UKF(const int n = 5, 
+      const bool use_laser = true, 
+      const bool user_radar = true);
 
-  // state vector: [pos1 pos2 vel_abs yaw_angle yaw_rate] in SI units and rad
+  /*-----------------------------------------------------------------------------
+    @brief  Destructor
+   ----------------------------------------------------------------------------*/
+  virtual ~UKF() {}
+
+  /*----------------------------------------------------------------------------
+    @brief  ProcessMeasurement
+
+    Process the filter update given a new measurement.
+
+    @param[in] meas_package    The current measurement package
+
+    @return True if successful, false otherwise.
+  ----------------------------------------------------------------------------*/
+  bool ProcessMeasurement(const MeasurementPackage meas_package);
+
+  /*----------------------------------------------------------------------------
+    @brief  CalculateRMSE
+
+    Calculate root-mean-squared error.
+
+    @param[in]  estimations    State estimate vector
+    @param[in]  ground_truth   Gound truth vector
+    
+    @return  RMSE
+  ----------------------------------------------------------------------------*/
+  Eigen::VectorXd CalculateRMSE(const std::vector<Eigen::VectorXd> &estimations, 
+                                const std::vector<Eigen::VectorXd> &ground_truth);
+
+  /*----------------------------------------------------------------------------
+  @brief  GetStateEstimate
+
+  Output the current estimated state vector (x_)
+
+  @return  Estimated state vector
+  ----------------------------------------------------------------------------*/
+  inline const Eigen::VectorXd GetStateEstimate() const {return x_;};
+
+  /*----------------------------------------------------------------------------
+  @brief  GetRadarNIS
+
+  Output Normalised Innovation Squared (NIS) of the current radar measurement 
+
+  @return  NIS of the current radar measurement
+  ----------------------------------------------------------------------------*/
+  inline const double GetRadarNIS() const { return NIS_radar_;};
+
+  /*----------------------------------------------------------------------------
+  @brief  GetLaserNIS
+
+  Output Normalised Innovation Squared (NIS) of the current laser measurement 
+
+  @return  NIS of the current laser measurement
+  ----------------------------------------------------------------------------*/
+  inline const double GetLaserNIS() const { return NIS_laser_;};
+
+protected:
+
+  // State vector: [pos1 pos2 vel_abs yaw_angle yaw_rate] in SI units and rad
   Eigen::VectorXd x_;
 
-  // state covariance matrix
+  // State covariance matrix
   Eigen::MatrixXd P_;
+  
+  // Flag for initialization
+  bool is_initialized_;
 
-  // predicted sigma points matrix
+  // if false, laser measurements will be ignored
+  bool use_laser_;
+
+  // If false, radar measurements will be ignored
+  bool use_radar_;
+
+  // Predicted sigma points matrix
   Eigen::MatrixXd Xsig_pred_;
 
-  // time when the state is true, in us
+  // Time when the state is true, in us
   long long time_us_;
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
@@ -76,35 +147,6 @@ public:
   Eigen::MatrixXd R_laser_;
 
   /*----------------------------------------------------------------------------
-    @brief  Constructor
-
-    Initialize all class variables and start the minimum path finder function.
-
-    @param[in] n             Size of the state vector
-    @param[in] use_laser     Flag to use laser
-    @param[in] user_radar    Flag to use radar
-   ----------------------------------------------------------------------------*/
-  UKF(const int n = 5, 
-      const bool use_laser = true, 
-      const bool user_radar = true);
-
-  /*-----------------------------------------------------------------------------
-    @brief  Destructor
-   ----------------------------------------------------------------------------*/
-  virtual ~UKF() {}
-
-  /*----------------------------------------------------------------------------
-    @brief  ProcessMeasurement
-
-    Process the filter update given a new measurement.
-
-    @param[in] meas_package    The current measurement package
-
-    @return True if successful, false otherwise.
-  ----------------------------------------------------------------------------*/
-  bool ProcessMeasurement(const MeasurementPackage meas_package);
-
-  /*----------------------------------------------------------------------------
     @brief  Prediction
 
     Unscented Kalman filter prediction (time update)
@@ -130,21 +172,6 @@ public:
     @param[in] z    Radar measurement
   ----------------------------------------------------------------------------*/
   void UpdateRadar(const Eigen::VectorXd & z);
-
-
-  /*----------------------------------------------------------------------------
-    @brief  CalculateRMSE
-
-    Calculate root-mean-squared error.
-
-    @param[in]  estimations    State estimate vector
-    @param[in]  ground_truth   Gound truth vector
-    
-    @return  RMSE
-  ----------------------------------------------------------------------------*/
-  Eigen::VectorXd CalculateRMSE(const std::vector<Eigen::VectorXd> &estimations, 
-                                const std::vector<Eigen::VectorXd> &ground_truth);
-  
   /*----------------------------------------------------------------------------
     @brief  NormAngle
 

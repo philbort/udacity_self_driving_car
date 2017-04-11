@@ -164,12 +164,14 @@ int main(int argc, char* argv[])
     if(!ukf.ProcessMeasurement(measurement_pack_list[k]))
       continue;
 
+    const VectorXd ukf_est = ukf.GetStateEstimate();
+    
     // output the estimation
-    out_file_ << ukf.x_(0) << "\t"; // pos1 - est
-    out_file_ << ukf.x_(1) << "\t"; // pos2 - est
-    out_file_ << ukf.x_(2) << "\t"; // vel_abs -est
-    out_file_ << ukf.x_(3) << "\t"; // yaw_angle -est
-    out_file_ << ukf.x_(4) << "\t"; // yaw_rate -est
+    out_file_ << ukf_est(0) << "\t"; // pos1 - est
+    out_file_ << ukf_est(1) << "\t"; // pos2 - est
+    out_file_ << ukf_est(2) << "\t"; // vel_abs -est
+    out_file_ << ukf_est(3) << "\t"; // yaw_angle -est
+    out_file_ << ukf_est(4) << "\t"; // yaw_rate -est
 
     // output the measurements
     if (measurement_pack_list[k].sensor_type_ == MeasurementPackage::LASER) 
@@ -199,18 +201,18 @@ int main(int argc, char* argv[])
 
     // output the NIS values 
     if (measurement_pack_list[k].sensor_type_ == MeasurementPackage::LASER) 
-      out_file_ << ukf.NIS_laser_ << "\n";
+      out_file_ << ukf.GetLaserNIS() << "\n";
     else if (measurement_pack_list[k].sensor_type_ == MeasurementPackage::RADAR)
-      out_file_ << ukf.NIS_radar_ << "\n";
+      out_file_ << ukf.GetRadarNIS() << "\n";
 
 
     // convert ukf x vector to cartesian to compare to ground truth
     VectorXd ukf_x_cartesian_ = VectorXd(4);
 
-    const double x_estimate_ = ukf.x_(0);
-    const double y_estimate_ = ukf.x_(1);
-    const double vx_estimate_ = ukf.x_(2) * cos(ukf.x_(3));
-    const double vy_estimate_ = ukf.x_(2) * sin(ukf.x_(3));
+    const double x_estimate_ = ukf_est(0);
+    const double y_estimate_ = ukf_est(1);
+    const double vx_estimate_ = ukf_est(2) * cos(ukf_est(3));
+    const double vy_estimate_ = ukf_est(2) * sin(ukf_est(3));
     
     ukf_x_cartesian_ << x_estimate_, y_estimate_, vx_estimate_, vy_estimate_;
     

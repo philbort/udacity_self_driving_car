@@ -39,7 +39,7 @@ UKF::UKF(const int  n,
 , R_laser_(2, 2)
 {
   // Set weights
-  weights_.fill(1 / (2 * (lambda_ + n_aug_)));
+  weights_.fill(1.0 / (2 * (lambda_ + n_aug_)));
   weights_(0) = lambda_/(lambda_ + n_aug_);
 
   // Set design and covariance matrix for laser
