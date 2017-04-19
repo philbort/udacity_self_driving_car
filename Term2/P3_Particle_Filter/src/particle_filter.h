@@ -1,14 +1,7 @@
-/*
- * particle_filter.h
- *
- * 2D particle filter class.
- *  Created on: Dec 12, 2016
- *      Author: Tiffany Huang
- */
-
 #ifndef PARTICLE_FILTER_H_
 #define PARTICLE_FILTER_H_
 
+#include <vector>
 #include "helper_functions.h"
 
 struct Particle {
@@ -26,7 +19,6 @@ class ParticleFilter {
 	
 	// Number of particles to draw
 	int num_particles; 
-	
 	
 	
 	// Flag, if filter is initialized
@@ -56,7 +48,10 @@ public:
 	 * @param std[] Array of dimension 3 [standard deviation of x [m], standard deviation of y [m]
 	 *   standard deviation of yaw [rad]]
 	 */
-	void init(double x, double y, double theta, double std[]);
+	void init(double x, 
+			  double y, 
+			  double theta, 
+			  double std[]);
 
 	/**
 	 * prediction Predicts the state for the next time step
@@ -67,7 +62,10 @@ public:
 	 * @param velocity Velocity of car from t to t+1 [m/s]
 	 * @param yaw_rate Yaw rate of car from t to t+1 [rad/s]
 	 */
-	void prediction(double delta_t, double std_pos[], double velocity, double yaw_rate);
+	void prediction(double delta_t, 
+					double std_pos[], 
+					double velocity, 
+					double yaw_rate);
 	
 	/**
 	 * dataAssociation Finds which observations correspond to which landmarks (likely by using
@@ -86,8 +84,10 @@ public:
 	 * @param observations Vector of landmark observations
 	 * @param map Map class containing map landmarks
 	 */
-	void updateWeights(double sensor_range, double std_landmark[], std::vector<LandmarkObs> observations,
-			Map map_landmarks);
+	void updateWeights(double sensor_range, 
+					   double std_landmark[], 
+					   std::vector<LandmarkObs> observations,
+					   Map map_landmarks);
 	
 	/**
 	 * resample Resamples from the updated set of particles to form
