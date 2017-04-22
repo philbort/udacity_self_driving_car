@@ -72,8 +72,8 @@ void ParticleFilter::write(std::string filename)
 	// You don't need to modify this file.
 	ofstream dataFile;
 	dataFile.open(filename, ios::app);
-	for (int i = 0; i < num_particles; ++i) {
+	for (int i = 0; i < num_particles; ++i)
 		dataFile << particles[i].x << " " << particles[i].y << " " << particles[i].theta << "\n";
-	}
+
 	dataFile.close();
 }

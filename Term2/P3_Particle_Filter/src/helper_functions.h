@@ -163,14 +163,14 @@ inline bool read_gt_data(std::string filename,
 	std::ifstream in_file_pos(filename.c_str(),std::ifstream::in);
 
 	// Return if we can't open the file.
-	if (!in_file_pos)	return false;
+	if (!in_file_pos)  return false;
 
 	// Declare single line of position measurement file:
 	std::string line_pos;
 
 	// Run over each single line:
-	while(getline(in_file_pos, line_pos))
-	{
+	while(getline(in_file_pos, line_pos)){
+
 		std::istringstream iss_pos(line_pos);
 
 		// Declare position values:

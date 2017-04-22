@@ -14,7 +14,6 @@ struct Particle {
 };
 
 
-
 class ParticleFilter {
 	
 	// Number of particles to draw
@@ -108,7 +107,5 @@ public:
 		return is_initialized;
 	}
 };
-
-
 
 #endif /* PARTICLE_FILTER_H_ */
