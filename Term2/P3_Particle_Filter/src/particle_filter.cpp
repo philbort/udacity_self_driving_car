@@ -98,25 +98,80 @@ void ParticleFilter::updateWeights(double sensor_range,
                                    vector<LandmarkObs> observations, 
                                    Map map_landmarks)
 {
-    // TODO: Update the weights of each particle using a mult-variate Gaussian distribution. You can read
-    //   more about this distribution here: https://en.wikipedia.org/wiki/Multivariate_normal_distribution
-    // NOTE: The observations are given in the VEHICLE'S coordinate system. Your particles are located
-    //   according to the MAP'S coordinate system. You will need to transform between the two systems.
-    //   Keep in mind that this transformation requires both rotation AND translation (but no scaling).
-    //   The following is a good resource for the theory:
-    //   https://www.willamette.edu/~gorr/classes/GeneralGraphics/Transforms/transforms2d.htm
-    //   and the following is a good resource for the actual equation to implement (look at equation 
-    //   3.33. Note that you'll need to switch the minus sign in that equation to a plus to account 
-    //   for the fact that the map's y-axis actually points downwards.)
-    //   http://planning.cs.uiuc.edu/node99.html
+    for (int i = 0; i < num_particles; ++i)
+    {    
+        // Define observations in world frame (map's coordinate)
+        vector<LandmarkObs> world_obs(observations.size());
+        
+        // Convert observations from local frame to world frame
+        for (int j = 0; j < observations.size(); ++j)
+        {
+            LandmarkObs landmark;
+            landmark.id = observations[j].id;
+            landmark.x = observations[j].x * cos(particles[i].theta) - 
+                         observations[j].y * sin(particles[i].theta) + particles[i].x;
+            landmark.y = observations[j].x * sin(particles[i].theta) + 
+                         observations[j].y * cos(particles[i].theta) + particles[i].y;
+            world_obs[j] = landmark;
+        }
+    
+        // Initialize vector of predicted landmarks
+        vector<LandmarkObs> pred_landmark;
+    
+        for (const Map::single_landmark_s & landmark : map_landmarks.landmark_list)
+        {
+            // Save the landmark if it is within sensor range
+            if (dist(landmark.x_f, landmark.y_f, particles[i].x, particles[i].y) <= sensor_range)
+                pred_landmark.push_back(LandmarkObs{landmark.id_i, landmark.x_f, landmark.y_f});
+        }
+    
+        // Associate predicted landmarks with observations
+        dataAssociation(pred_landmark, world_obs);
+    
+        // Initialize the new weight
+        double weight = 1.0;
+    
+        for (const LandmarkObs& cur_obs : world_obs)
+        {
+            // Map id is 1-based indexing
+            Map::single_landmark_s cur_pred = map_landmarks.landmark_list[cur_obs.id - 1];
+
+            // Get the square of the difference between the prediction and the measurement
+            const double dx_sqr = pow(cur_obs.x - cur_pred.x_f, 2);
+            const double dy_sqr = pow(cur_obs.y - cur_pred.y_f, 2);
+
+            // Calculate the multi-variate Gaussian distribution
+            const double mvg = 1 / (M_PI * 2 * std_landmark[0] * std_landmark[1]) *
+                               exp(-(dx_sqr/ pow(std_landmark[0], 2) + 
+                                     dy_sqr / pow(std_landmark[1], 2)));
+
+            // Accumulate the new weight
+            weight *= mvg;
+        }
+
+        // Assign the new weight
+        particles[i].weight = weight;
+        weights[i] = weight;
+    }
 }
 
 void ParticleFilter::resample()
 {
-    // TODO: Resample particles with replacement with probability proportional to their weight. 
-    // NOTE: You may find std::discrete_distribution helpful here.
-    //   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
+    // Random number generator
+    default_random_engine gen;
 
+    // Discrete distribution to draw random integers
+    discrete_distribution<int> distribution {weights.begin(), weights.end()};
+
+    // Initialize vector for new particles
+    vector<Particle> new_particles(num_particles);
+
+    // Draw new particles based on distribution
+    for (int i = 0; i < num_particles; ++i)
+        new_particles[i] = particles[distribution(gen)];
+
+    // Update the particles
+    particles = new_particles;
 }
 
 void ParticleFilter::write(string filename)
