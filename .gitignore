@@ -1,60 +1,32 @@
 .DS_Store
+*.pyc
+**/build/**
+**/.ipynb_checkpoints/**
+*.p
+*.zip
 
 Term1/Lab_AlexNet/bvlc-alexnet.npy
-Term1/Lab_AlexNet/*.pyc
-Term1/Lab_AlexNet/train.p
-Term1/Lab_AlexNet/.DS_Store
 
-Term1/Lab_Keras/*.p
-Term1/Lab_Keras/.ipynb_checkpoints/
-
-Term1/Lab_TensorFlow/.ipynb_checkpoints/
-Term1/Lab_TensorFlow/*.zip
 Term1/Lab_TensorFlow/*.pickle
 
 Term1/Lab_Transfer_Learning/inception-100/
 Term1/Lab_Transfer_Learning/resnet-100/
 Term1/Lab_Transfer_Learning/vgg-100/
-Term1/Lab_Transfer_Learning/.DS_Store
 
-Term1/P1_Find_Lane_Lines/.ipynb_checkpoints/
 
 Term1/P2_Traffic_Signs/data
 Term1/P2_Traffic_Signs/checkpoint
-Term1/P2_Traffic_Signs/.ipynb_checkpoints/
 Term1/P2_Traffic_Signs/*.h5
 Term1/P2_Traffic_Signs/models
 Term1/P2_Traffic_Signs/*.swp
-Term1/P2_Traffic_Signs/*.p
-Term1/P2_Traffic_Signs/.DS_Store
 Term1/P2_Traffic_Signs/*.ckpt
 Term1/P2_Traffic_Signs/*.meta
 Term1/P2_Traffic_Signs/img_transform_NB.ipynb
 Term1/P2_Traffic_Signs/*.html
 
 Term1/P3_Bahavioral_Cloning/UdacitySimulator.app/
-Term1/P3_Bahavioral_Cloning/.DS_Store
-Term1/P3_Bahavioral_Cloning/.ipynb_checkpoints/
 Term1/P3_Bahavioral_Cloning/IMG/
 Term1/P3_Bahavioral_Cloning/driving_log.csv
 Term1/P3_Bahavioral_Cloning/Udacity_data/
 
-Term1/P4_Advanced_Lane_Lines/.ipynb_checkpoints/
-
-Term1/P5_Vehicle_Detection/.ipynb_checkpoints/
-Term1/P5_Vehicle_Detection/training_data/*.p
-
-Term2/.DS_Store
-
-Term2/Lab_PID_Controller/*.pyc
-
-Term2/Lab_Particle_Filter/*.pyc
-Term2/Lab_Particle_Filter/DS_Store
-
-Term2/P1_Extended_Kalman_Filter/.DS_Store
-Term2/P1_Extended_Kalman_Filter/build/
-
-Term2/P2_Unscented_Kalman_Filter/.DS_Store
-Term2/P2_Unscented_Kalman_Filter/build/
-
-Term2/P3_Particle_Filter/build/
+Term2/P4_PID_Controller/simulator.app/
