@@ -13,7 +13,6 @@ Term1/Lab_Transfer_Learning/inception-100/
 Term1/Lab_Transfer_Learning/resnet-100/
 Term1/Lab_Transfer_Learning/vgg-100/
 
-
 Term1/P2_Traffic_Signs/data
 Term1/P2_Traffic_Signs/checkpoint
 Term1/P2_Traffic_Signs/*.h5
