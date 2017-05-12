@@ -32,14 +32,13 @@ int main()
   uWS::Hub h;
 
   PID pid;
-  // TODO: Initialize the pid variable.
 
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode)
   {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
-    if (length && length > 2 && data[0] == '4' && data[1] == '2')
+    if (length > 2 && data[0] == '4' && data[1] == '2')
     {
       auto s = hasData(string(data));
       if (s != "")
@@ -70,7 +69,8 @@ int main()
           cout << msg << endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
         }
-      } else
+      } 
+      else
       {
         // Manual driving
         string msg = "42[\"manual\",{}]";
@@ -107,7 +107,7 @@ int main()
   });
 
   const int port = 4567;
-  
+
   if (h.listen(port))
     cout << "Listening to port " << port << endl;
   else
