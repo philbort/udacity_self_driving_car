@@ -7,14 +7,6 @@ class PID
 public:
 
   /*
-  * Errors
-  */
-  double p_error;
-  double i_error;
-  double d_error;
-
-
-  /*
   * Constructor
   */
   PID(const double Kp = 0.2, 
@@ -48,6 +40,12 @@ private:
   double Ki_;
   double Kd_;
 
+  /*
+  * Errors
+  */
+  double p_err_;
+  double i_err_;
+  double d_err_;
 };
 
 #endif /* PID_H */
