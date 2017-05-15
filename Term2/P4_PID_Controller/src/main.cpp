@@ -21,13 +21,16 @@ string hasData(string s)
   return "";
 }
 
+static const double commanded_speed = 35;
+
 int main()
 {
   uWS::Hub h;
 
   PID steer_pid;
+  PID throttle_pid(1.0, 0.004, 3.0);
 
-  h.onMessage([&steer_pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode)
+  h.onMessage([&steer_pid, &throttle_pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode)
   {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -42,25 +45,29 @@ int main()
         if (event == "telemetry")
         {
           // j[1] is the data JSON object
-          double cte = stod(j[1]["cte"].get<string>());
-          double speed = stod(j[1]["speed"].get<string>());
-          double angle = stod(j[1]["steering_angle"].get<string>());
-          double steer_value;
+          const double steering_cte = stod(j[1]["cte"].get<string>());
+          const double speed = stod(j[1]["speed"].get<string>());
+          const double speed_err = speed - commanded_speed;
+          const double angle = stod(j[1]["steering_angle"].get<string>());
           /*
           * TODO: Calcuate steering value here, remember the steering value is
           * [-1, 1].
           * NOTE: Feel free to play around with the throttle and speed. Maybe use
           * another PID controller to control the speed!
           */
-          steer_pid.UpdateError(cte);
-          steer_value = steer_pid.TotalError();
+          steer_pid.UpdateError(steering_cte);
+          double steer_value = steer_pid.TotalError();
           
+          throttle_pid.UpdateError(speed_err);
+          double throttle_value = throttle_pid.TotalError();
+
           // DEBUG
-          cout << "CTE: " << cte << " Steering Value: " << steer_value << endl;
+          cout << "Steering CTE: " << steering_cte << " Steering Value: " << steer_value << endl;
+          cout << "Throttle Error: " << speed_err << " Throttle Value: " << throttle_value << endl;
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
-          msgJson["throttle"] = 0.3;
+          msgJson["throttle"] = throttle_value;
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           cout << msg << endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);

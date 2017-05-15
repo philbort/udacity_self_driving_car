@@ -23,7 +23,7 @@ public:
   /*
   * Update the PID error variables given cross track error.
   */
-  void UpdateError(double cte);
+  void UpdateError(const double cte);
 
 
   /*
@@ -46,6 +46,13 @@ private:
   double p_err_;
   double i_err_;
   double d_err_;
+
+  /*
+  * Sigmoid function to normalize the value range.
+  */
+  double sigmoid(const double value,
+                 const double lower = -1.0,
+                 const double upper = 1.0);
 };
 
 #endif /* PID_H */
