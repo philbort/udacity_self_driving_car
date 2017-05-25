@@ -9,11 +9,12 @@
 namespace plt = matplotlibcpp;
 
 using namespace std;
+using namespace Eigen;
 using CppAD::AD;
 
 // TODO: Set N and dt
 size_t N = 25;
-double dt = 0.051;
+double dt = 0.05;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -27,30 +28,28 @@ double dt = 0.051;
 // This is the length from front to CoG that has a similar radius.
 const double Lf = 2.67;
 
-double ref_cte = 0;
-double ref_epsi = 0;
-// NOTE: feel free to play around with this
-// or do something completely different
-double ref_v = 40;
+const double ref_cte = 0;
+const double ref_epsi = 0;
+const double ref_v = 40;
 
 // The solver takes all the state variables and actuator
-// variables in a singular vector. Thus, we should to establish
+// variables in a singular vector. Thus, we should establish
 // when one variable starts and another ends to make our lifes easier.
-size_t x_start = 0;
-size_t y_start = x_start + N;
-size_t psi_start = y_start + N;
-size_t v_start = psi_start + N;
-size_t cte_start = v_start + N;
-size_t epsi_start = cte_start + N;
-size_t delta_start = epsi_start + N;
-size_t a_start = delta_start + N - 1;
+const size_t x_start = 0;
+const size_t y_start = x_start + N;
+const size_t psi_start = y_start + N;
+const size_t v_start = psi_start + N;
+const size_t cte_start = v_start + N;
+const size_t epsi_start = cte_start + N;
+const size_t delta_start = epsi_start + N;
+const size_t a_start = delta_start + N - 1;
 
 class FG_eval
 {
  public:
-  Eigen::VectorXd coeffs;
+  VectorXd coeffs;
   // Coefficients of the fitted polynomial.
-  FG_eval(Eigen::VectorXd coeffs) { this->coeffs = coeffs; }
+  FG_eval(VectorXd coeffs) { this->coeffs = coeffs; }
 
   typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
   // `fg` is a vector containing the cost and constraints.
@@ -85,6 +84,7 @@ class FG_eval
       fg[0] += CppAD::pow(vars[delta_start + i + 1] - vars[delta_start + i], 2);
       fg[0] += CppAD::pow(vars[a_start + i + 1] - vars[a_start + i], 2);
     }
+
     //
     // Setup Constraints
     //
@@ -103,7 +103,8 @@ class FG_eval
     fg[1 + epsi_start] = vars[epsi_start];
 
     // The rest of the constraints
-    for (int i = 0; i < N - 1; i++) {
+    for (int i = 0; i < N - 1; i++)
+    {
       // The state at time t+1 .
       AD<double> x1 = vars[x_start + i + 1];
       AD<double> y1 = vars[y_start + i + 1];
@@ -154,7 +155,7 @@ class FG_eval
 MPC::MPC() {}
 MPC::~MPC() {}
 
-vector<double> MPC::Solve(Eigen::VectorXd x0, Eigen::VectorXd coeffs) {
+vector<double> MPC::Solve(VectorXd x0, VectorXd coeffs) {
   size_t i;
   typedef CPPAD_TESTVECTOR(double) Dvector;
 
@@ -174,7 +175,8 @@ vector<double> MPC::Solve(Eigen::VectorXd x0, Eigen::VectorXd coeffs) {
   // Initial value of the independent variables.
   // Should be 0 except for the initial values.
   Dvector vars(n_vars);
-  for (int i = 0; i < n_vars; i++) {
+  for (int i = 0; i < n_vars; i++)
+  {
     vars[i] = 0.0;
   }
   // Set the initial variable values
@@ -191,7 +193,8 @@ vector<double> MPC::Solve(Eigen::VectorXd x0, Eigen::VectorXd coeffs) {
 
   // Set all non-actuators upper and lowerlimits
   // to the max negative and positive values.
-  for (int i = 0; i < delta_start; i++) {
+  for (int i = 0; i < delta_start; i++)
+  {
     vars_lowerbound[i] = -1.0e19;
     vars_upperbound[i] = 1.0e19;
   }
@@ -199,14 +202,16 @@ vector<double> MPC::Solve(Eigen::VectorXd x0, Eigen::VectorXd coeffs) {
   // The upper and lower limits of delta are set to -25 and 25
   // degrees (values in radians).
   // NOTE: Feel free to change this to something else.
-  for (int i = delta_start; i < a_start; i++) {
+  for (int i = delta_start; i < a_start; i++)
+  {
     vars_lowerbound[i] = -0.436332;
     vars_upperbound[i] = 0.436332;
   }
 
   // Acceleration/decceleration upper and lower limits.
   // NOTE: Feel free to change this to something else.
-  for (int i = a_start; i < n_vars; i++) {
+  for (int i = a_start; i < n_vars; i++)
+  {
     vars_lowerbound[i] = -1.0;
     vars_upperbound[i] = 1.0;
   }
@@ -216,7 +221,8 @@ vector<double> MPC::Solve(Eigen::VectorXd x0, Eigen::VectorXd coeffs) {
   // state indices.
   Dvector constraints_lowerbound(n_constraints);
   Dvector constraints_upperbound(n_constraints);
-  for (int i = 0; i < n_constraints; i++) {
+  for (int i = 0; i < n_constraints; i++)
+  {
     constraints_lowerbound[i] = 0;
     constraints_upperbound[i] = 0;
   }
@@ -271,7 +277,7 @@ vector<double> MPC::Solve(Eigen::VectorXd x0, Eigen::VectorXd coeffs) {
 //
 
 // Evaluate a polynomial.
-double polyeval(Eigen::VectorXd coeffs, double x)
+double polyeval(VectorXd coeffs, double x)
 {
   double result = 0.0;
   for (int i = 0; i < coeffs.size(); i++) {
@@ -283,20 +289,23 @@ double polyeval(Eigen::VectorXd coeffs, double x)
 // Fit a polynomial.
 // Adapted from
 // https://github.com/JuliaMath/Polynomials.jl/blob/master/src/Polynomials.jl#L676-L716
-Eigen::VectorXd polyfit(Eigen::VectorXd xvals,
-                        Eigen::VectorXd yvals,
-                        int order)
+VectorXd polyfit(VectorXd xvals,
+                 VectorXd yvals,
+                 int order)
 {
   assert(xvals.size() == yvals.size());
   assert(order >= 1 && order <= xvals.size() - 1);
-  Eigen::MatrixXd A(xvals.size(), order + 1);
+  MatrixXd A(xvals.size(), order + 1);
 
-  for (int i = 0; i < xvals.size(); i++) {
+  for (int i = 0; i < xvals.size(); i++)
+  {
     A(i, 0) = 1.0;
   }
 
-  for (int j = 0; j < xvals.size(); j++) {
-    for (int i = 0; i < order; i++) {
+  for (int j = 0; j < xvals.size(); j++)
+  {
+    for (int i = 0; i < order; i++)
+    {
       A(j, i + 1) = A(j, i) * xvals(j);
     }
   }
@@ -311,8 +320,8 @@ int main()
   MPC mpc;
   int iters = 50;
 
-  Eigen::VectorXd ptsx(2);
-  Eigen::VectorXd ptsy(2);
+  VectorXd ptsx(2);
+  VectorXd ptsy(2);
   ptsx << -100, 100;
   ptsy << -1, -1;
 
@@ -329,7 +338,7 @@ int main()
   // TODO: calculate the orientation error
   double epsi = -atan(coeffs[1]);
 
-  Eigen::VectorXd state(6);
+  VectorXd state(6);
   state << x, y, psi, v, cte, epsi;
 
   vector<double> x_vals = {state[0]};
@@ -358,6 +367,7 @@ int main()
     a_vals.push_back(vars[7]);
 
     state << vars[0], vars[1], vars[2], vars[3], vars[4], vars[5];
+    cout << state << endl;
   }
 
   // Plot values
