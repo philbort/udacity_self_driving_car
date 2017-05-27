@@ -4,6 +4,8 @@
 #include "Eigen-3.3/Eigen/Core"
 
 using CppAD::AD;
+using namespace Eigen;
+using namespace std;
 
 // TODO: Set the timestep length and duration
 size_t N = 0;
@@ -24,8 +26,8 @@ const double Lf = 2.67;
 class FG_eval {
  public:
   // Fitted polynomial coefficients
-  Eigen::VectorXd coeffs;
-  FG_eval(Eigen::VectorXd coeffs) { this->coeffs = coeffs; }
+  VectorXd coeffs;
+  FG_eval(VectorXd coeffs) { this->coeffs = coeffs; }
 
   typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
   void operator()(ADvector& fg, const ADvector& vars) {
@@ -42,7 +44,7 @@ class FG_eval {
 MPC::MPC() {}
 MPC::~MPC() {}
 
-vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
+vector<double> MPC::Solve(VectorXd state, VectorXd coeffs) {
   bool ok = true;
   size_t i;
   typedef CPPAD_TESTVECTOR(double) Dvector;
@@ -110,7 +112,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 
   // Cost
   auto cost = solution.obj_value;
-  std::cout << "Cost " << cost << std::endl;
+  cout << "Cost " << cost << endl;
 
   // TODO: Return the first actuator values. The variables can be accessed with
   // `solution.x[i]`.
