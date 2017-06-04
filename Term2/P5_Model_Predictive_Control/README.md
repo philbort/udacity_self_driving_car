@@ -3,6 +3,35 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 
+## Summary
+
+### Vehicle Model
+
+The vehicle state includes position x and y, orientation psi, velocity v, cross track error cte,  and orientation error epsi.
+Actuators model the external forces that impact the vehicle state. Actuators of the vehicle include steering angle delta, acceleration a.
+
+The state update equations are:
+```
+x[t+1] = x[t] + v[t] * cos(psi[t]) * dt
+y[t+1] = y[t] + v[t] * sin(psi[t]) * dt
+psi[t+1] = psi[t] + (v[t] / Lf) * delta[t] * dt
+v[t+1] = v[t] + a[t] * dt
+cte[t+1] = f(x[t]) - y[t] + v[t] * sin(epsi[t]) * dt
+epsi[t+1] = psi[t] - psides[t] + v[t] * (delta[t] / Lf) * dt
+```
+
+### Timestep Length and Elapsed Duration
+
+The timestep length (`N`) is the number of epoches MPC simulates and the elapsed duration (`dt`) is the period between two consecutive update epoches. The multiplication of `N` and `dt` is the time horizon `T`. for MPC, `T` doesn't have to be too big since taking into account too long in the future is unnecessary for near term prediction. In this project 10 is used for `N` and 0.1 is used for `dt`.
+
+### Polynomial Fitting and MPC Preprocessing
+
+A third ordeer polynomial is used in this project to fit the reference waypoints.
+
+### Latency
+
+A 100ms latency is simulated for the MPC in this project. In order to handle it, we need to take into account the latency for MPC. The state obtained from the simulator is extrapolated for 100ms before feed into MPC.
+
 ## Dependencies
 
 * cmake >= 3.5
